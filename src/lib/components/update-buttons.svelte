@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { isComplete, type TaskInfo } from "$lib/data-types/task-info";
+  import Button from "./button.svelte";
 
   type UpdateState = TaskInfo | null | "loading";
 
@@ -71,9 +72,9 @@
 {:else}
   <div class="actions">
     <div>
-      <button on:click={updateReviews} disabled={!!updateReviewsState}>
+      <Button on:click={updateReviews} disabled={!!updateReviewsState}>
         Update My Reviews
-      </button>
+      </Button>
       {#if updateReviewsState}
         <div>
           {#if updateReviewsState === "loading"}
@@ -88,9 +89,9 @@
     </div>
 
     <div>
-      <button on:click={updateUsers} disabled={!!updateUsersState}>
+      <Button on:click={updateUsers} disabled={!!updateUsersState}>
         Update Users
-      </button>
+      </Button>
       {#if updateUsersState}
         <div>
           {#if updateUsersState === "loading"}
@@ -103,12 +104,12 @@
     </div>
 
     <div>
-      <button
+      <Button
         on:click={updateOtherReviews}
         disabled={!!updateOtherReviewsState}
       >
         Update Other Users' Reviews
-      </button>
+      </Button>
       {#if updateOtherReviewsState}
         <div>
           {#if updateOtherReviewsState === "loading"}

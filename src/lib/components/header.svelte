@@ -112,6 +112,10 @@
       bottom: 0;
       padding: var(--4);
     }
+
+    .header-contents {
+      justify-content: space-between;
+    }
   }
 
   @media screen and (min-width: 600px) {
