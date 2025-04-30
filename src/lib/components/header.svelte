@@ -1,9 +1,20 @@
+<script lang="ts">
+  const headerLinks = [
+    { name: "Update", path: "/update" },
+    { name: "Read", path: "/read" },
+    { name: "Settings", path: "/settings" },
+  ] as const;
+</script>
+
 <nav class="header">
   <div class="header-contents">
     <a href="/" class="homeLink">
       <span class="homeLink-logo">/10</span>
       <span class="homeLink-name">Slash Ten</span>
     </a>
+    {#each headerLinks as link}
+      <a href={link.path} class="header-link">{link.name}</a>
+    {/each}
   </div>
 </nav>
 
@@ -20,6 +31,7 @@
     width: calc(100% - var(--8));
     max-width: var(--128);
     margin: 0 auto;
+    gap: var(--2);
   }
 
   .homeLink {
@@ -28,6 +40,8 @@
     display: flex;
     align-items: start;
     gap: var(--1);
+    font-family: var(--header-font);
+    padding-right: var(--4);
   }
 
   .homeLink-logo {
@@ -37,7 +51,7 @@
   }
 
   .homeLink-name {
-    font-size: var(--font-xl);
+    font-size: var(--font-large);
     color: var(--text-emphasis);
   }
 
@@ -45,10 +59,15 @@
     content: "";
     display: block;
     height: 2px;
-    width: 200px;
     background-image: linear-gradient(to right, var(--theme-1), var(--theme-2));
     position: absolute;
     top: 38px;
+    right: 0;
     left: 44px;
+  }
+
+  .header-link {
+    color: var(--text);
+    text-decoration: none;
   }
 </style>

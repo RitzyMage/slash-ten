@@ -1,3 +1,6 @@
-<h1>Home</h1>
-<a href="/recommendations">Recommendations</a>
-<a href="/update">Update</a>
+<script>
+  import Recommendations from "$lib/components/recommendations.svelte";
+</script>
+
+<h1>Recommendations</h1>
+<Recommendations />

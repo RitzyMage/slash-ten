@@ -1,5 +1,15 @@
 /* VARIABLES */
 
+@font-face {
+  font-family: "Cormorant";
+  src: url("/Cormorant-Regular.ttf");
+}
+
+@font-face {
+  font-family: "Quicksand";
+  src: url("/Quicksand-Regular.ttf");
+}
+
 :root {
   /* COLORS */
 
@@ -28,6 +38,11 @@
   --success: var(--green);
   --error: var(--red);
 
+  /* FONTS */
+
+  --header-font: "Quicksand", sans-serif;
+  --body-font: "Cormorant", serif;
+
   /* SIZES */
 
   --1: 8px;
@@ -39,9 +54,8 @@
   --64: 512px;
   --128: 1024px;
 
-  --font-normal: 16px;
-  --font-large: 24px;
-  --font-xl: 32px;
+  --font-normal: 24px;
+  --font-large: 32px;
 
   /* UTIL */
   --rounded: 2px;
@@ -57,6 +71,7 @@ body {
   margin: 0;
   color: var(--text);
   font-size: var(--font-normal);
+  font-family: var(--body-font);
 }
 
 article {
