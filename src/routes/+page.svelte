@@ -1,6 +1,7 @@
 <script>
+  import H1 from "$lib/components/h1.svelte";
   import Recommendations from "$lib/components/recommendations.svelte";
 </script>
 
-<h1>Recommendations</h1>
+<H1>Recommendations</H1>
 <Recommendations />

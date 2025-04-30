@@ -93,6 +93,10 @@
     text-decoration: none;
   }
 
+  .header-link:hover {
+    color: var(--text-emphasis);
+  }
+
   .header-menu {
     height: 24px;
   }
