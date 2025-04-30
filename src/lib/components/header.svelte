@@ -1,9 +1,17 @@
 <script lang="ts">
+  import Menu from "./icons/menu.svelte";
+
   const headerLinks = [
     { name: "Update", path: "/update" },
     { name: "Read", path: "/read" },
     { name: "Settings", path: "/settings" },
   ] as const;
+
+  let toggleMenu = () => {
+    menuShown = !menuShown;
+  };
+
+  let menuShown = false;
 </script>
 
 <nav class="header">
@@ -12,9 +20,16 @@
       <span class="homeLink-logo">/10</span>
       <span class="homeLink-name">Slash Ten</span>
     </a>
-    {#each headerLinks as link}
-      <a href={link.path} class="header-link">{link.name}</a>
-    {/each}
+    <div
+      class="header-links {menuShown
+        ? 'header-links_open'
+        : 'header-links_closed'}"
+    >
+      {#each headerLinks as link}
+        <a href={link.path} class="header-link">{link.name}</a>
+      {/each}
+    </div>
+    <span class="header-menu"> <Menu size={24} onclick={toggleMenu} /></span>
   </div>
 </nav>
 
@@ -31,7 +46,7 @@
     width: calc(100% - var(--8));
     max-width: var(--128);
     margin: 0 auto;
-    gap: var(--2);
+    gap: var(--4);
   }
 
   .homeLink {
@@ -48,6 +63,7 @@
     background-color: var(--theme-2);
     padding: 0 2px;
     border-radius: var(--rounded);
+    font-size: 16px;
   }
 
   .homeLink-name {
@@ -66,8 +82,41 @@
     left: 44px;
   }
 
+  .header-links {
+    display: flex;
+    align-items: center;
+    gap: var(--2);
+  }
+
   .header-link {
     color: var(--text);
     text-decoration: none;
+  }
+
+  .header-menu {
+    height: 24px;
+  }
+
+  @media screen and (max-width: 600px) {
+    .header-links_closed {
+      display: none;
+    }
+
+    .header-links {
+      position: absolute;
+      flex-direction: column;
+      left: 0;
+      right: 0;
+      top: var(--8);
+      background-color: var(--bg);
+      bottom: 0;
+      padding: var(--4);
+    }
+  }
+
+  @media screen and (min-width: 600px) {
+    .header-menu {
+      display: none;
+    }
   }
 </style>
