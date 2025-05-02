@@ -1,10 +1,6 @@
 import { Status, type TaskInfo } from "../../data-types/task-info";
 
 abstract class Task {
-  constructor() {
-    this._id = Task.lastID++;
-  }
-
   public async Run(cleanup: () => void): Promise<void> {
     try {
       await this._Run();
@@ -17,10 +13,6 @@ abstract class Task {
   }
 
   protected abstract _Run(): Promise<void>;
-
-  public get id() {
-    return this._id;
-  }
 
   public async getStream() {
     this._streams.push(null);
@@ -45,7 +37,7 @@ abstract class Task {
   }
 
   protected updateStatus(status: Status, info: string) {
-    console.log(`Task ${this.id} is now ${status} with message ${info}`);
+    console.log(`Task is now ${status} with message ${info}`);
     this._currentInfo = { status, info };
     this.sendMessage();
   }
@@ -70,7 +62,6 @@ abstract class Task {
       .forEach((controller) => controller?.close());
   }
 
-  private _id: number;
   private _streamControllers: (ReadableStreamDefaultController<any> | null)[] =
     [];
   private _streams: (ReadableStream | null)[] = [];

@@ -1,9 +1,7 @@
-import Task from "./UpdateRunner/Task";
-
-export {};
+import type Task from "$lib/server/tasks/task";
 
 declare global {
-  var __tasks: Record<string, Task>;
-  var __taskTags: Record<string, number>;
-  var __tagTasks: Record<string, string>;
+  var __tasks: Record<number, Task>;
 }
+
+export {}; // required so this file is treated as a module
