@@ -53,6 +53,9 @@
       {#each updateStatus.info.split("\n") as line}
         {line}<br />
       {/each}
+      <progress max="1" value={updateStatus.completion}
+        >{updateStatus.completion}</progress
+      >
     </div>
   {/if}
   <div class="actions">

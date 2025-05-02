@@ -8,6 +8,7 @@ export enum Status {
 export interface TaskInfo {
   status: Status;
   info: string;
+  completion: number;
 }
 
 export function isComplete(info: TaskInfo) {

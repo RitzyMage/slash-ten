@@ -5,7 +5,7 @@ abstract class Task {
     try {
       await this._Run();
     } catch (e) {
-      this.updateStatus(Status.FAILED, `exception thrown: ${e?.toString()}`);
+      this.updateStatus(Status.FAILED, `exception thrown: ${e?.toString()}`, 1);
     } finally {
       cleanup();
       this.closeStreams();
@@ -36,9 +36,13 @@ abstract class Task {
     return this._currentInfo;
   }
 
-  protected updateStatus(status: Status, info: string) {
-    console.log(`Task is now ${status} with message ${info}`);
-    this._currentInfo = { status, info };
+  protected updateStatus(status: Status, info: string, completion: number) {
+    console.log(
+      `Task is now ${status} with message ${info}, ${(completion * 100).toFixed(
+        2
+      )}% done`
+    );
+    this._currentInfo = { status, info, completion };
     this.sendMessage();
   }
 
@@ -54,6 +58,7 @@ abstract class Task {
   private _currentInfo: TaskInfo = {
     status: Status.STARTED,
     info: "Job queued",
+    completion: 0,
   };
 
   private closeStreams() {
