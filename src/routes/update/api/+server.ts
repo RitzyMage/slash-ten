@@ -1,3 +1,4 @@
+import TaskStream from "$lib/server/tasks/task-stream";
 import TimeoutTask from "$lib/server/tasks/timeout-task";
 import UpdateRunner from "$lib/server/update-runner";
 
@@ -6,7 +7,8 @@ let runner = new UpdateRunner();
 export async function GET() {
   let task = runner.GetTask(-1);
   if (task) {
-    return new Response(await task.getStream(), {
+    let taskStream = new TaskStream(task);
+    return new Response(taskStream.stream, {
       headers: {
         "Content-Type": "text/event-stream",
         "Cache-Control": "no-cache",

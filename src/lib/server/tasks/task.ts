@@ -1,4 +1,5 @@
 import { Status, type TaskInfo } from "../../data-types/task-info";
+import type TaskObserver from "./task-observer";
 
 abstract class Task {
   public async Run(cleanup: () => void): Promise<void> {
@@ -8,29 +9,18 @@ abstract class Task {
       this.updateStatus(Status.FAILED, `exception thrown: ${e?.toString()}`, 1);
     } finally {
       cleanup();
-      this.closeStreams();
     }
   }
 
+  public addObserver(observer: TaskObserver) {
+    this._observers.push(observer);
+  }
+
+  public removeObserver(observer: TaskObserver) {
+    this._observers = this._observers.filter((_) => _ !== observer);
+  }
+
   protected abstract _Run(): Promise<void>;
-
-  public async getStream() {
-    this._streams.push(null);
-    this._streamControllers.push(null);
-    let index = this._streams.length;
-    let stream = new ReadableStream({
-      start: (controller) => {
-        this._streamControllers[index] = controller;
-        this.sendMessage();
-      },
-    });
-    this._streams[index] = stream;
-    return stream;
-  }
-
-  public sendStreamUpdate() {
-    this.sendMessage();
-  }
 
   public get currentInfo() {
     return this._currentInfo;
@@ -43,16 +33,13 @@ abstract class Task {
       )}% done`
     );
     this._currentInfo = { status, info, completion };
-    this.sendMessage();
+    this.notifyObservers();
   }
 
-  private sendMessage() {
-    let message = JSON.stringify(this._currentInfo);
-    this._streamControllers
-      .filter((_, i) => this._streams[i]?.locked)
-      .forEach((controller) =>
-        controller?.enqueue(this._encoder.encode(`data: ${message}\n\n`))
-      );
+  private notifyObservers() {
+    for (let observer of this._observers) {
+      observer.notify(this._currentInfo);
+    }
   }
 
   private _currentInfo: TaskInfo = {
@@ -61,17 +48,7 @@ abstract class Task {
     completion: 0,
   };
 
-  private closeStreams() {
-    this._streamControllers
-      .filter((_, i) => this._streams[i]?.locked)
-      .forEach((controller) => controller?.close());
-  }
-
-  private _streamControllers: (ReadableStreamDefaultController<any> | null)[] =
-    [];
-  private _streams: (ReadableStream | null)[] = [];
-  private _encoder = new TextEncoder();
-  static lastID = 1;
+  private _observers: TaskObserver[] = [];
 }
 
 export default Task;
