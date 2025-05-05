@@ -6,21 +6,14 @@ let runner = new UpdateRunner();
 
 export async function GET() {
   let task = runner.GetTask(-1);
-  if (task) {
-    let taskStream = new TaskStream(task);
-    return new Response(taskStream.stream, {
-      headers: {
-        "Content-Type": "text/event-stream",
-        "Cache-Control": "no-cache",
-        Connection: "keep-alive",
-      },
-    });
-  } else {
-    return Response.json(
-      { message: "No tasks running for current user" },
-      { status: 404 }
-    );
-  }
+  let taskStream = new TaskStream(task);
+  return new Response(taskStream.stream, {
+    headers: {
+      "Content-Type": "text/event-stream",
+      "Cache-Control": "no-cache",
+      Connection: "keep-alive",
+    },
+  });
 }
 
 export async function POST() {

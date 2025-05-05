@@ -3,17 +3,32 @@ import type Task from "./task";
 import TaskObserver from "./task-observer";
 
 export default class TaskStream extends TaskObserver {
-  constructor(task: Task) {
+  constructor(task: Task | null) {
     super();
-    task.addObserver(this);
-    this._stream = new ReadableStream({
-      start: (controller) => {
-        this._controller = controller;
-      },
-      cancel: () => {
-        task.removeObserver(this);
-      },
-    });
+    if (task) {
+      task.addObserver(this);
+      this._stream = new ReadableStream({
+        start: (controller) => {
+          this._controller = controller;
+        },
+        cancel: () => {
+          task.removeObserver(this);
+        },
+      });
+    } else {
+      this._stream = new ReadableStream({
+        start: (controller) => {
+          controller.enqueue(
+            this._encoder.encode(
+              `event: status\ndata: ${JSON.stringify({
+                message: "No tasks running",
+              })}\n\n`
+            )
+          );
+          controller.close();
+        },
+      });
+    }
   }
 
   notify(info: TaskInfo): void {
