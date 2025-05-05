@@ -1,3 +1,4 @@
+import TaskSequence from "$lib/server/tasks/task-sequence";
 import TaskStream from "$lib/server/tasks/task-stream";
 import TimeoutTask from "$lib/server/tasks/timeout-task";
 import UpdateRunner from "$lib/server/update-runner";
@@ -17,7 +18,7 @@ export async function GET() {
 }
 
 export async function POST() {
-  let task = new TimeoutTask(30000);
+  let task = new TaskSequence([new TimeoutTask(2000), new TimeoutTask(1000)]);
   runner.AddTask(task, -1);
   return Response.json({ taskId: -1 });
 }

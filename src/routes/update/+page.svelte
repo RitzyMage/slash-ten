@@ -31,7 +31,6 @@
   }
 
   async function update() {
-    console.log("calling update");
     await axios.post("/update/api");
     setUpUpdateStream();
   }

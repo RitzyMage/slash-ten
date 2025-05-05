@@ -1,10 +1,9 @@
 import { isComplete, type TaskInfo } from "$lib/data-types/task-info";
 import type Task from "./task";
-import TaskObserver from "./task-observer";
+import type TaskObserver from "./task-observer";
 
-export default class TaskStream extends TaskObserver {
+export default class TaskStream implements TaskObserver {
   constructor(task: Task | null) {
-    super();
     if (task) {
       task.addObserver(this);
       this._stream = new ReadableStream({
