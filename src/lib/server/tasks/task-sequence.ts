@@ -3,9 +3,10 @@ import Task from "./task";
 import type TaskObserver from "./task-observer";
 
 export default class TaskSequence extends Task implements TaskObserver {
-  constructor(tasks: Task[]) {
+  constructor(tasks: Task[], indent = 0) {
     super();
     this._subtasks = tasks;
+    this._indent = indent;
     tasks.forEach((_) => _.addObserver(this));
   }
 
@@ -34,8 +35,12 @@ export default class TaskSequence extends Task implements TaskObserver {
     }
 
     let message =
-      `running tasks:\n` +
-      subtaskInfo.map((_, i) => `\t${i + 1}: ${_.info}`).join("\n");
+      `${this.GetIndentTabs()}running tasks:\n` +
+      subtaskInfo
+        .map(
+          (_, i) => `${this.GetIndentTabs(this._indent + 1)}${i + 1}: ${_.info}`
+        )
+        .join("\n");
 
     let percentComplete =
       subtaskInfo.reduce((total, _) => total + _.completion, 0) /
@@ -44,5 +49,10 @@ export default class TaskSequence extends Task implements TaskObserver {
     this.updateStatus(status, message, percentComplete);
   }
 
+  private GetIndentTabs(numTabs = this._indent) {
+    return new Array(numTabs).map((_) => "\t").join("");
+  }
+
   private _subtasks: Task[];
+  private _indent = 0;
 }

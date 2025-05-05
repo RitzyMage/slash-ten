@@ -49,9 +49,9 @@
     no updates running right now
   {:else}
     <div>
-      {#each updateStatus.info.split("\n") as line}
-        {line}<br />
-      {/each}
+      <div class="updateInfo">
+        {updateStatus.info}
+      </div>
       <progress max="1" value={updateStatus.completion}>
         {updateStatus.completion}
       </progress>
@@ -67,5 +67,9 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
+  }
+
+  .updateInfo {
+    white-space: pre;
   }
 </style>
