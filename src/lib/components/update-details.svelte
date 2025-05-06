@@ -13,10 +13,27 @@
     {details.completion}
   </progress>
   {#if "details" in details}
-    <ol class="updateDetails-subdetails">
+    <ol
+      class={[
+        "updateDetails-subdetails",
+        details.parallel
+          ? "updateDetails-subdetails_parallel"
+          : "updateDetails-subdetails_sequence",
+      ]}
+    >
       {#each details.details as subtask}
         <li><UpdateDetails details={subtask} /></li>
       {/each}
     </ol>
   {/if}
 </div>
+
+<style>
+  .updateDetails-subdetails {
+    margin-left: var(--4);
+  }
+
+  .updateDetails-subdetails_parallel {
+    list-style-type: disc;
+  }
+</style>

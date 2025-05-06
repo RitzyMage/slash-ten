@@ -13,6 +13,7 @@ interface BasicTaskDetails {
 
 interface ParentTaskDetails extends BasicTaskDetails {
   details: TaskDetails[];
+  parallel: boolean;
 }
 
 export type TaskDetails = ParentTaskDetails | BasicTaskDetails;

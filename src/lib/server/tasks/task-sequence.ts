@@ -13,6 +13,7 @@ export default class TaskSequence extends Task implements TaskObserver {
       message: "Sequence queued",
       completion: 0,
       details: this.GetStatuses(),
+      parallel: false,
     });
   }
 
@@ -40,13 +41,21 @@ export default class TaskSequence extends Task implements TaskObserver {
       status = Status.SUCCESSFUL;
     }
 
-    let message = `running tasks in sequence`;
+    let message = `running task ${
+      subtaskInfo.findIndex((_) => _.status === Status.IN_PROGRESS) + 1
+    } / ${subtaskInfo.length}`;
 
     let completion =
       subtaskInfo.reduce((total, _) => total + _.completion, 0) /
       subtaskInfo.length;
 
-    this.updateStatus({ status, message, completion, details: subtaskInfo });
+    this.updateStatus({
+      status,
+      message,
+      completion,
+      details: subtaskInfo,
+      parallel: false,
+    });
   }
 
   private _subtasks: Task[];

@@ -43,23 +43,12 @@
 
 <div class="updatePage">
   <H1>Update</H1>
-
   {#if updateStatus === "loading"}
     loadin'
   {:else if !updateStatus}
-    no updates running right now
+    <p>no updates running right now</p>
+    <Button onclick={update} disabled={!!updateStatus}>Update</Button>
   {:else}
     <UpdateDetails details={updateStatus} />
   {/if}
-  <div class="actions">
-    <Button onclick={update} disabled={!!updateStatus}>Update</Button>
-  </div>
 </div>
-
-<style>
-  .actions {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-</style>
