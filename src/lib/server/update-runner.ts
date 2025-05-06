@@ -17,9 +17,6 @@ class UpdateRunner {
     if (!task) {
       throw new Error(`Task ${id} not found`);
     }
-    if (!isComplete(task.currentInfo)) {
-      throw new Error(`Cannot remove task ${id}; it has not finished!`);
-    }
     delete this.tasks[id];
   }
 
