@@ -21,17 +21,20 @@ export async function GET() {
 export async function POST() {
   let task = new ParallelTasks([
     new TimeoutTask(8000),
-    new TaskSequence([
-      new TimeoutTask(5000, true),
-      new TimeoutTask(3000),
-      new TimeoutTask(2000),
-    ]),
+    new TaskSequence(
+      [
+        new TimeoutTask(5000),
+        new TimeoutTask(3000, true),
+        new TimeoutTask(2000),
+      ],
+      { stopOnFail: true }
+    ),
     new TaskSequence([
       new TimeoutTask(2000),
       new TimeoutTask(3000, true),
       new ParallelTasks([
         new TimeoutTask(8000, true),
-        new TimeoutTask(10000, true),
+        new TimeoutTask(10000),
         new TimeoutTask(4000, true),
       ]),
     ]),

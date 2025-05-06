@@ -1,11 +1,16 @@
-import { Status, type TaskDetails } from "$lib/data-types/task-info";
+import {
+  isComplete,
+  Status,
+  type TaskDetails,
+} from "$lib/data-types/task-info";
 import Task from "./task";
 import type TaskObserver from "./task-observer";
 
 export default class TaskSequence extends Task implements TaskObserver {
-  constructor(tasks: Task[]) {
+  constructor(tasks: Task[], { stopOnFail }: { stopOnFail?: boolean } = {}) {
     super();
     this._subtasks = tasks;
+    this._stopOnFail = stopOnFail ?? false;
 
     tasks.forEach((_) => _.addObserver(this));
     this.updateStatus({
@@ -24,6 +29,9 @@ export default class TaskSequence extends Task implements TaskObserver {
   protected async _Run(): Promise<void> {
     for (let task of this._subtasks) {
       await task.Run(() => task.removeObserver(this));
+      if (this.currentInfo.status === Status.FAILED) {
+        return;
+      }
     }
   }
 
@@ -35,9 +43,13 @@ export default class TaskSequence extends Task implements TaskObserver {
     let subtaskInfo = this.GetStatuses();
 
     let status: Status = Status.IN_PROGRESS;
-    /*if (subtaskInfo.some((_) => _.status === Status.FAILED)) {
+    if (
+      this._stopOnFail
+        ? subtaskInfo.some((_) => _.status === Status.FAILED)
+        : subtaskInfo.every((_) => _.status === Status.FAILED)
+    ) {
       status = Status.FAILED;
-    } else*/ if (subtaskInfo.every((_) => _.status === Status.SUCCESSFUL)) {
+    } else if (subtaskInfo.every((_) => isComplete(_))) {
       status = Status.SUCCESSFUL;
     }
 
@@ -62,4 +74,5 @@ export default class TaskSequence extends Task implements TaskObserver {
   }
 
   private _subtasks: Task[];
+  private _stopOnFail: boolean;
 }

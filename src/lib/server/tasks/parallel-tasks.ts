@@ -39,9 +39,9 @@ export default class ParallelTasks extends Task implements TaskObserver {
     let subtaskInfo = this.GetStatuses();
 
     let status: Status = Status.IN_PROGRESS;
-    /*if (subtaskInfo.every((_) => _.status === Status.FAILED)) {
+    if (subtaskInfo.every((_) => _.status === Status.FAILED)) {
       status = Status.FAILED;
-    } else */ if (subtaskInfo.every(isComplete)) {
+    } else if (subtaskInfo.every(isComplete)) {
       status = Status.SUCCESSFUL;
     }
 

@@ -20,7 +20,6 @@
       updateStatus = data;
       if (isComplete(data)) {
         eventSource.close();
-        updateStatus = null;
       }
     };
 
