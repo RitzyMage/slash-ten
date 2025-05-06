@@ -1,4 +1,8 @@
-import { Status, type TaskDetails } from "$lib/data-types/task-info";
+import {
+  isComplete,
+  Status,
+  type TaskDetails,
+} from "$lib/data-types/task-info";
 import Task from "./task";
 import type TaskObserver from "./task-observer";
 
@@ -35,9 +39,9 @@ export default class ParallelTasks extends Task implements TaskObserver {
     let subtaskInfo = this.GetStatuses();
 
     let status: Status = Status.IN_PROGRESS;
-    if (subtaskInfo.some((_) => _.status === Status.FAILED)) {
+    /*if (subtaskInfo.every((_) => _.status === Status.FAILED)) {
       status = Status.FAILED;
-    } else if (subtaskInfo.every((_) => _.status === Status.SUCCESSFUL)) {
+    } else */ if (subtaskInfo.every(isComplete)) {
       status = Status.SUCCESSFUL;
     }
 

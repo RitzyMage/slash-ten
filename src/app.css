@@ -18,10 +18,13 @@
   --gray-light: #e7e5e4;
   --white: #f5f5f4;
 
-  --purple-dark: #8e51ff;
+  --purple-dark: oklch(38.1% 0.176 304.987);
+  --purple: #8e51ff;
   --purple-light: #c4b4ff;
 
+  --green-dark: oklch(44.8% 0.119 151.328);
   --green: #7bf1a8;
+  --red-dark: oklch(44.4% 0.177 26.899);
   --red: #ff6467;
 
   /* THEME */
@@ -32,11 +35,14 @@
   --text: var(--gray-light);
   --text-emphasis: var(--white);
 
-  --theme-1: var(--purple-dark);
+  --theme-1: var(--purple);
   --theme-2: var(--purple-light);
+  --theme-3: var(--purple-dark);
 
   --success: var(--green);
+  --success-dark: var(--green-dark);
   --error: var(--red);
+  --error-dark: var(--red-dark);
 
   /* FONTS */
 
@@ -54,6 +60,7 @@
   --64: 512px;
   --128: 1024px;
 
+  --font-small: 20px;
   --font-normal: 24px;
   --font-large: 32px;
 

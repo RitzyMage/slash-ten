@@ -4,9 +4,10 @@ import Task from "./task";
 const CHUNKS = 20;
 
 export default class TimeoutTask extends Task {
-  constructor(time: number) {
+  constructor(time: number, fail: boolean = false) {
     super();
     this._time = time;
+    this._fail = fail;
   }
 
   protected async _Run(): Promise<void> {
@@ -27,11 +28,12 @@ export default class TimeoutTask extends Task {
     }
 
     this.updateStatus({
-      status: Status.SUCCESSFUL,
+      status: this._fail ? Status.FAILED : Status.SUCCESSFUL,
       message: `Timeout for ${this._time} finished`,
       completion: 1,
     });
   }
 
   private _time: number;
+  private _fail: boolean;
 }

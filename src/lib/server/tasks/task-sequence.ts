@@ -35,15 +35,18 @@ export default class TaskSequence extends Task implements TaskObserver {
     let subtaskInfo = this.GetStatuses();
 
     let status: Status = Status.IN_PROGRESS;
-    if (subtaskInfo.some((_) => _.status === Status.FAILED)) {
+    /*if (subtaskInfo.some((_) => _.status === Status.FAILED)) {
       status = Status.FAILED;
-    } else if (subtaskInfo.every((_) => _.status === Status.SUCCESSFUL)) {
+    } else*/ if (subtaskInfo.every((_) => _.status === Status.SUCCESSFUL)) {
       status = Status.SUCCESSFUL;
     }
 
-    let message = `running task ${
-      subtaskInfo.findIndex((_) => _.status === Status.IN_PROGRESS) + 1
-    } / ${subtaskInfo.length}`;
+    let message =
+      status === Status.IN_PROGRESS
+        ? `running task ${
+            subtaskInfo.findIndex((_) => _.status === Status.IN_PROGRESS) + 1
+          } / ${subtaskInfo.length}`
+        : `Finished ${subtaskInfo.length} subtasks`;
 
     let completion =
       subtaskInfo.reduce((total, _) => total + _.completion, 0) /
