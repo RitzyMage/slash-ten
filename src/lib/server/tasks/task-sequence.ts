@@ -6,7 +6,14 @@ export default class TaskSequence extends Task implements TaskObserver {
   constructor(tasks: Task[]) {
     super();
     this._subtasks = tasks;
+
     tasks.forEach((_) => _.addObserver(this));
+    this.updateStatus({
+      status: Status.STARTED,
+      message: "Sequence queued",
+      completion: 0,
+      details: this.GetStatuses(),
+    });
   }
 
   notify(info: TaskDetails): void {

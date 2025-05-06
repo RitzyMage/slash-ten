@@ -5,6 +5,7 @@
   import { isComplete, type TaskDetails } from "$lib/data-types/task-info";
   import Button from "$lib/components/button.svelte";
   import axios from "axios";
+  import UpdateDetails from "$lib/components/update-details.svelte";
 
   type UpdateState = TaskDetails | null | "loading";
 
@@ -48,14 +49,7 @@
   {:else if !updateStatus}
     no updates running right now
   {:else}
-    <div>
-      <div class="updateInfo">
-        {updateStatus.message}
-      </div>
-      <progress max="1" value={updateStatus.completion}>
-        {updateStatus.completion}
-      </progress>
-    </div>
+    <UpdateDetails details={updateStatus} />
   {/if}
   <div class="actions">
     <Button onclick={update} disabled={!!updateStatus}>Update</Button>
@@ -67,9 +61,5 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
-  }
-
-  .updateInfo {
-    white-space: pre;
   }
 </style>

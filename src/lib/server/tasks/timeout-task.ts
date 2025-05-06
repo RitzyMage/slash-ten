@@ -1,7 +1,7 @@
 import { Status } from "$lib/data-types/task-info";
 import Task from "./task";
 
-const CHUNKS = 10;
+const CHUNKS = 20;
 
 export default class TimeoutTask extends Task {
   constructor(time: number) {
@@ -18,9 +18,10 @@ export default class TimeoutTask extends Task {
 
     for (let i = 0; i < CHUNKS; ++i) {
       await new Promise((res) => setTimeout(res, this._time / CHUNKS));
+      let timeLeft = ((1 - i / CHUNKS) * this._time) / 1000;
       this.updateStatus({
         status: Status.IN_PROGRESS,
-        message: `Waiting...`,
+        message: `Waiting for ${timeLeft.toFixed(2)}s`,
         completion: i / CHUNKS,
       });
     }

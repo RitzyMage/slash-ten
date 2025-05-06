@@ -8,6 +8,12 @@ export default class ParallelTasks extends Task implements TaskObserver {
     this._subtasks = tasks;
 
     tasks.forEach((_) => _.addObserver(this));
+    this.updateStatus({
+      status: Status.STARTED,
+      message: "Parallel tasks queued",
+      completion: 0,
+      details: this.GetStatuses(),
+    });
   }
 
   notify(info: TaskDetails): void {
