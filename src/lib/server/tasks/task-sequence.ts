@@ -1,16 +1,15 @@
-import { Status, type TaskInfo } from "$lib/data-types/task-info";
+import { Status, type TaskDetails } from "$lib/data-types/task-info";
 import Task from "./task";
 import type TaskObserver from "./task-observer";
 
 export default class TaskSequence extends Task implements TaskObserver {
-  constructor(tasks: Task[], indent = 0) {
+  constructor(tasks: Task[]) {
     super();
     this._subtasks = tasks;
-    this._indent = indent;
     tasks.forEach((_) => _.addObserver(this));
   }
 
-  notify(info: TaskInfo): void {
+  notify(info: TaskDetails): void {
     this.Update();
   }
 
@@ -34,25 +33,14 @@ export default class TaskSequence extends Task implements TaskObserver {
       status = Status.SUCCESSFUL;
     }
 
-    let message =
-      `${this.GetIndentTabs()}running tasks:\n` +
-      subtaskInfo
-        .map(
-          (_, i) => `${this.GetIndentTabs(this._indent + 1)}${i + 1}: ${_.info}`
-        )
-        .join("\n");
+    let message = `running tasks in sequence`;
 
-    let percentComplete =
+    let completion =
       subtaskInfo.reduce((total, _) => total + _.completion, 0) /
       subtaskInfo.length;
 
-    this.updateStatus(status, message, percentComplete);
-  }
-
-  private GetIndentTabs(numTabs = this._indent) {
-    return new Array(numTabs).map((_) => "\t").join("");
+    this.updateStatus({ status, message, completion, details: subtaskInfo });
   }
 
   private _subtasks: Task[];
-  private _indent = 0;
 }

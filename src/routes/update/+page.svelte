@@ -2,11 +2,11 @@
   import H1 from "$lib/components/h1.svelte";
 
   import { onMount } from "svelte";
-  import { isComplete, type TaskInfo } from "$lib/data-types/task-info";
+  import { isComplete, type TaskDetails } from "$lib/data-types/task-info";
   import Button from "$lib/components/button.svelte";
   import axios from "axios";
 
-  type UpdateState = TaskInfo | null | "loading";
+  type UpdateState = TaskDetails | null | "loading";
 
   let updateStatus: UpdateState = "loading";
 
@@ -15,7 +15,7 @@
     const eventSource = new EventSource("/update/api");
 
     eventSource.onmessage = (e) => {
-      const data: TaskInfo = JSON.parse(e.data);
+      const data: TaskDetails = JSON.parse(e.data);
       updateStatus = data;
       if (isComplete(data)) {
         eventSource.close();
@@ -50,7 +50,7 @@
   {:else}
     <div>
       <div class="updateInfo">
-        {updateStatus.info}
+        {updateStatus.message}
       </div>
       <progress max="1" value={updateStatus.completion}>
         {updateStatus.completion}

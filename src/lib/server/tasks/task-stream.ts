@@ -1,4 +1,4 @@
-import { isComplete, type TaskInfo } from "$lib/data-types/task-info";
+import { isComplete, type TaskDetails } from "$lib/data-types/task-info";
 import type Task from "./task";
 import type TaskObserver from "./task-observer";
 
@@ -30,14 +30,14 @@ export default class TaskStream implements TaskObserver {
     }
   }
 
-  notify(info: TaskInfo): void {
+  notify(info: TaskDetails): void {
     this.sendMessage(info);
     if (isComplete(info)) {
       this._controller?.close();
     }
   }
 
-  private sendMessage(info: TaskInfo) {
+  private sendMessage(info: TaskDetails) {
     let message = JSON.stringify(info);
     this._controller?.enqueue(this._encoder.encode(`data: ${message}\n\n`));
   }

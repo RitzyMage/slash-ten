@@ -1,4 +1,4 @@
-import { Status, type TaskInfo } from "../../data-types/task-info";
+import { Status, type TaskDetails } from "../../data-types/task-info";
 import type TaskObserver from "./task-observer";
 
 abstract class Task {
@@ -6,7 +6,11 @@ abstract class Task {
     try {
       await this._Run();
     } catch (e) {
-      this.updateStatus(Status.FAILED, `exception thrown: ${e?.toString()}`, 1);
+      this.updateStatus({
+        status: Status.FAILED,
+        message: `exception thrown: ${e?.toString()}`,
+        completion: 1,
+      });
     } finally {
       cleanup();
     }
@@ -26,13 +30,8 @@ abstract class Task {
     return this._currentInfo;
   }
 
-  protected updateStatus(status: Status, info: string, completion: number) {
-    console.log(
-      `Task is now ${status} with message ${info}, ${(completion * 100).toFixed(
-        2
-      )}% done`
-    );
-    this._currentInfo = { status, info, completion };
+  protected updateStatus(newDetails: TaskDetails) {
+    this._currentInfo = newDetails;
     this.notifyObservers();
   }
 
@@ -42,9 +41,9 @@ abstract class Task {
     }
   }
 
-  private _currentInfo: TaskInfo = {
+  private _currentInfo: TaskDetails = {
     status: Status.STARTED,
-    info: "Job queued",
+    message: "Job queued",
     completion: 0,
   };
 
