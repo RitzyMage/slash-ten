@@ -7,6 +7,8 @@ import {
   unique,
   pgEnum,
   primaryKey,
+  json,
+  timestamp,
 } from "drizzle-orm/pg-core";
 
 export const mediaTypeEnum = pgEnum("MEDIA_TYPE", ["GAME", "MOVIE", "BOOK"]);
@@ -80,4 +82,10 @@ export const externalLinks = pgTable("ExternalLink", {
     .references(() => media.id, { onDelete: "cascade" }),
 
   link: text("link").notNull(),
+});
+
+export const updateHistory = pgTable("UpdateHistory", {
+  id: serial("id").primaryKey(),
+  updateData: json("updateData").notNull(),
+  ran: timestamp("updated").notNull(),
 });
