@@ -86,3 +86,12 @@ article {
   align-self: center;
   width: calc(100% - var(--8));
 }
+
+a {
+  color: var(--theme-2);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--theme-1);
+}
