@@ -7,7 +7,7 @@ import UpdateRunner from "$lib/server/update-runner";
 let runner = new UpdateRunner();
 
 export async function GET() {
-  let task = runner.GetTask(-1);
+  let task = runner.task ?? null;
   let taskStream = new TaskStream(task);
   return new Response(taskStream.stream, {
     headers: {
@@ -40,6 +40,6 @@ export async function POST() {
     ]),
     new TimeoutTask(4000),
   ]);
-  runner.AddTask(task, -1);
+  runner.RunTask(task);
   return Response.json({ taskId: -1 });
 }

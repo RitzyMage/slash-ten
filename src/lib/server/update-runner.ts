@@ -2,35 +2,32 @@ import Task from "./tasks/task";
 import { db } from "./db";
 import { updateHistory } from "./db/schema";
 
-// apparently static members get reset on HMR so had to make a global
-if (!globalThis.__tasks) {
-  globalThis.__tasks = {};
-}
-
 class UpdateRunner {
-  public AddTask(task: Task, userId: number) {
-    this.tasks[userId] = task;
-    task.Run(() => this.RemoveTask(userId));
+  public RunTask(task: Task) {
+    if (this.task) {
+      throw new Error("Cannot start a new task while one is running!");
+    }
+    this.task = task;
+    task.Run(() => this.RemoveTask());
   }
 
-  private async RemoveTask(id: number) {
-    let task = this.tasks[id];
-    if (!task) {
-      throw new Error(`Task ${id} not found`);
+  private async RemoveTask() {
+    if (!this.task) {
+      throw new Error(`Not currently running a task`);
     }
     await db.insert(updateHistory).values({
       ran: new Date(),
-      updateData: JSON.stringify(task.currentInfo),
+      updateData: JSON.stringify(this.task.currentInfo),
     });
-    delete this.tasks[id];
+    this.task = undefined;
   }
 
-  public GetTask(id: number) {
-    return this.tasks[id];
+  private set task(task: Task | undefined) {
+    globalThis.__task = task;
   }
 
-  private get tasks() {
-    return globalThis.__tasks;
+  public get task() {
+    return globalThis.__task;
   }
 }
 
