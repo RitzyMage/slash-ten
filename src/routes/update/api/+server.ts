@@ -1,7 +1,5 @@
-import ParallelTasks from "$lib/server/tasks/parallel-tasks";
-import TaskSequence from "$lib/server/tasks/task-sequence";
 import TaskStream from "$lib/server/tasks/task-stream";
-import TimeoutTask from "$lib/server/tasks/timeout-task";
+import GetUpdateTask from "$lib/server/tasks/update-task";
 import UpdateRunner from "$lib/server/update-runner";
 
 let runner = new UpdateRunner();
@@ -19,27 +17,7 @@ export async function GET() {
 }
 
 export async function POST() {
-  let task = new ParallelTasks([
-    new TimeoutTask(8000),
-    new TaskSequence(
-      [
-        new TimeoutTask(5000),
-        new TimeoutTask(3000, true),
-        new TimeoutTask(2000),
-      ],
-      { stopOnFail: true }
-    ),
-    new TaskSequence([
-      new TimeoutTask(2000),
-      new TimeoutTask(3000, true),
-      new ParallelTasks([
-        new TimeoutTask(8000, true),
-        new TimeoutTask(10000),
-        new TimeoutTask(4000, true),
-      ]),
-    ]),
-    new TimeoutTask(4000),
-  ]);
+  let task = await GetUpdateTask();
   runner.RunTask(task);
   return Response.json({ taskId: -1 });
 }
