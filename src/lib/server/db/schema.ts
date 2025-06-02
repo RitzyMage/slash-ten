@@ -26,6 +26,54 @@ export const users = pgTable(
   ]
 );
 
+export const clients = pgTable("Client", {
+  id: serial("id").primaryKey(),
+  bookId: integer("bookId").references(() => users.id),
+  name: text("name").notNull(),
+});
+
+export const ignored = pgTable(
+  "Ignored",
+  {
+    clientId: integer("clientId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+
+    mediaId: integer("mediaId")
+      .notNull()
+      .references(() => media.id, { onDelete: "cascade" }),
+
+    score: integer("score").notNull(),
+  },
+  (ignored) => [
+    primaryKey({ columns: [ignored.clientId, ignored.mediaId] }),
+    index("ignored_user_idx").on(ignored.clientId),
+    index("ignored_media_idx").on(ignored.mediaId),
+    index("ignored_user_media_idx").on(ignored.clientId, ignored.mediaId),
+  ]
+);
+
+export const favorites = pgTable(
+  "Favorites",
+  {
+    clientId: integer("clientId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+
+    mediaId: integer("mediaId")
+      .notNull()
+      .references(() => media.id, { onDelete: "cascade" }),
+
+    score: integer("score").notNull(),
+  },
+  (ignored) => [
+    primaryKey({ columns: [ignored.clientId, ignored.mediaId] }),
+    index("favorites_user_idx").on(ignored.clientId),
+    index("favorites_media_idx").on(ignored.mediaId),
+    index("favorites_user_media_idx").on(ignored.clientId, ignored.mediaId),
+  ]
+);
+
 export const media = pgTable(
   "Media",
   {
