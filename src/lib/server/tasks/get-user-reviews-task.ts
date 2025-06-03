@@ -30,7 +30,7 @@ export default class GetUserReviewsTask extends TaskSequenceWithInitialize {
     );
   }
 
-  protected GetMessageLine(): string {
+  protected get prefix(): string {
     return `Getting info for user ${this._userId}`;
   }
 

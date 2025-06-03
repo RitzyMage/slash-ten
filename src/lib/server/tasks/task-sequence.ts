@@ -7,15 +7,19 @@ import Task from "./task";
 import type TaskObserver from "./task-observer";
 
 export default class TaskSequence extends Task implements TaskObserver {
-  constructor(tasks: Task[], { stopOnFail }: { stopOnFail?: boolean } = {}) {
+  constructor(
+    tasks: Task[],
+    { stopOnFail, prefix }: { stopOnFail?: boolean; prefix?: string } = {}
+  ) {
     super();
     this._subtasks = tasks;
     this._stopOnFail = stopOnFail ?? false;
+    this._prefix = prefix || "";
 
     tasks.forEach((_) => _.addObserver(this));
     this.updateStatus({
       status: Status.STARTED,
-      message: "Sequence queued",
+      message: this.Prefix("Sequence queued"),
       completion: 0,
       details: this.GetStatuses(),
       parallel: false,
@@ -53,12 +57,13 @@ export default class TaskSequence extends Task implements TaskObserver {
       status = Status.SUCCESSFUL;
     }
 
-    let message =
+    let message = this.Prefix(
       status === Status.IN_PROGRESS
         ? `running task ${
             subtaskInfo.findIndex((_) => _.status === Status.IN_PROGRESS) + 1
           } / ${subtaskInfo.length}`
-        : `Finished ${subtaskInfo.length} subtasks`;
+        : `Finished ${subtaskInfo.length} subtasks`
+    );
 
     let completion =
       subtaskInfo.reduce((total, _) => total + _.completion, 0) /
@@ -73,6 +78,11 @@ export default class TaskSequence extends Task implements TaskObserver {
     });
   }
 
+  private Prefix(message: string) {
+    return this._prefix ? `${this._prefix}: ${message}` : message;
+  }
+
   private _subtasks: Task[];
   private _stopOnFail: boolean;
+  private _prefix: string;
 }
