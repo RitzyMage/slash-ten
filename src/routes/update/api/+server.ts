@@ -19,5 +19,5 @@ export async function GET() {
 export async function POST() {
   let task = await GetUpdateTask();
   runner.RunTask(task);
-  return Response.json({ taskId: -1 });
+  return Response.json({ success: true });
 }
