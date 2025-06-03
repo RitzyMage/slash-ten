@@ -13,6 +13,7 @@ export default class GetUserReviewsTask extends TaskSequenceWithInitialize {
   }
 
   protected async GetSequence(): Promise<Task[]> {
+    // IMPLEMENT I: get number of pages for user
     for (let i = 0; i < CHUNKS; ++i) {
       await new Promise((res) => setTimeout(res, TIME / CHUNKS));
       let timeLeft = ((1 - i / CHUNKS) * TIME) / 1000;

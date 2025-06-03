@@ -1,9 +1,8 @@
 import GetUserReviewsTask from "./get-user-reviews-task";
 import ParallelTasks from "./parallel-tasks";
+import TaskSequence from "./task-sequence";
+import UpdateClientsTask from "./update-clients-task";
 
 export default async function GetUpdateTask() {
-  return new ParallelTasks([
-    new GetUserReviewsTask(1),
-    new GetUserReviewsTask(10),
-  ]);
+  return new TaskSequence([new UpdateClientsTask()]);
 }

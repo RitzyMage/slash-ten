@@ -12,6 +12,7 @@ export default class GetUserReviewPageTask extends Task {
   }
 
   protected async _Run(): Promise<void> {
+    // IMPLEMENT I: get user reviews, add to database
     this.updateStatus({
       status: Status.IN_PROGRESS,
       message: `Get User ${this._userId} page ${this._page} started`,
