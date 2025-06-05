@@ -1,14 +1,12 @@
 import axios from "axios";
-import ReviewFetcher, {
-  type BookMetadata,
-  type MediaTemp,
-} from "./review-fetcher";
+import type ReviewFetcher from "./review-fetcher";
+import type { BookMetadata, MediaTemp } from "./review-fetcher";
 import type { ID, User, Review, Media } from "./types";
 import { HTMLElement, parse } from "node-html-parser";
 
 const seriesRegex = / \(.+ #\d+(,\s*Part\s*\d+\s*of\s*\d+)?\)/g;
 
-export default class GoodreadsReviewFetcher extends ReviewFetcher {
+export default class GoodreadsReviewFetcher implements ReviewFetcher {
   async getUser(user: ID): Promise<User | null> {
     let firstPage = await this.getUserReviewHTML(user, 1, true);
     if (!firstPage) {

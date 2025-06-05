@@ -1,4 +1,4 @@
-import { Status } from "$lib/data-types/task-info";
+import { Status } from "$lib/server/tasks/task-info";
 import Task from "./task";
 
 const CHUNKS = 20;

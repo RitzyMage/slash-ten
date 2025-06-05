@@ -1,4 +1,4 @@
-import { Status, type TaskDetails } from "../../data-types/task-info";
+import { Status, type TaskDetails } from "./task-info";
 import type TaskObserver from "./task-observer";
 
 abstract class Task {

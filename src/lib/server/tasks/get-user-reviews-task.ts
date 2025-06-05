@@ -1,4 +1,4 @@
-import { Status } from "$lib/data-types/task-info";
+import { Status } from "$lib/server/tasks/task-info";
 import GetUserReviewPageTask from "./get-user-review-page-task";
 import type Task from "./task";
 import TaskSequenceWithInitialize from "./task-sequence-with-initialize";

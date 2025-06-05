@@ -17,13 +17,13 @@ interface UserReviewsResult {
   numPages: number;
 }
 
-export default abstract class ReviewFetcher {
-  abstract getUserReviews(
+export default interface ReviewFetcher {
+  getUserReviews(
     userId: ID,
     page: number,
     params?: Record<string, boolean | number | string>
   ): Promise<UserReviewsResult>;
 
-  abstract getUser(user: ID): Promise<User | null>;
-  abstract getOtherReviewers(url: string): Promise<User[]>;
+  getUser(user: ID): Promise<User | null>;
+  getOtherReviewers(url: string): Promise<User[]>;
 }

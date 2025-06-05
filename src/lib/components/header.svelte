@@ -4,7 +4,6 @@
   const headerLinks = [
     { name: "Update", path: "/update" },
     { name: "Read", path: "/read" },
-    { name: "Settings", path: "/settings" },
   ] as const;
 
   let toggleMenu = () => {

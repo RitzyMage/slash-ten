@@ -2,7 +2,7 @@ import {
   isComplete,
   Status,
   type TaskDetails,
-} from "$lib/data-types/task-info";
+} from "$lib/server/tasks/task-info";
 import Task from "./task";
 import type TaskObserver from "./task-observer";
 
