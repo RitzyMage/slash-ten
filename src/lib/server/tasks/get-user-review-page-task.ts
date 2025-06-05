@@ -1,14 +1,24 @@
 import { Status } from "$lib/server/tasks/task-info";
+import type ReviewFetcher from "../review-fetchers/review-fetcher";
 import Task from "./task";
 
 const TEST_TIME = 200;
 const CHUNKS = 10;
 
 export default class GetUserReviewPageTask extends Task {
-  constructor({ userId, page }: { userId: number; page: number }) {
+  constructor({
+    userId,
+    page,
+    reviewFetcher,
+  }: {
+    userId: number;
+    page: number;
+    reviewFetcher: ReviewFetcher;
+  }) {
     super();
     this._userId = userId;
     this._page = page;
+    this._reviewFetcher = reviewFetcher;
   }
 
   protected async _Run(): Promise<void> {
@@ -40,4 +50,5 @@ export default class GetUserReviewPageTask extends Task {
 
   private _userId: number;
   private _page: number;
+  private _reviewFetcher: ReviewFetcher;
 }

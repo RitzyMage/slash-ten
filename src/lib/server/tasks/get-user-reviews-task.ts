@@ -1,4 +1,5 @@
 import { Status } from "$lib/server/tasks/task-info";
+import type ReviewFetcher from "../review-fetchers/review-fetcher";
 import GetUserReviewPageTask from "./get-user-review-page-task";
 import type Task from "./task";
 import TaskSequenceWithInitialize from "./task-sequence-with-initialize";
@@ -7,9 +8,16 @@ const CHUNKS = 10;
 const TIME = 2000;
 
 export default class GetUserReviewsTask extends TaskSequenceWithInitialize {
-  constructor(userId: number) {
+  constructor({
+    userId,
+    reviewFetcher,
+  }: {
+    userId: number;
+    reviewFetcher: ReviewFetcher;
+  }) {
     super();
     this._userId = userId;
+    this._reviewFetcher = reviewFetcher;
   }
 
   protected async GetSequence(): Promise<Task[]> {
@@ -27,7 +35,12 @@ export default class GetUserReviewsTask extends TaskSequenceWithInitialize {
     let numPages = 10;
     let pagesToFetch = Array.from({ length: numPages }).map((_, i) => i + 1);
     return pagesToFetch.map(
-      (page) => new GetUserReviewPageTask({ userId: this._userId, page })
+      (page) =>
+        new GetUserReviewPageTask({
+          userId: this._userId,
+          page,
+          reviewFetcher: this._reviewFetcher,
+        })
     );
   }
 
@@ -35,5 +48,6 @@ export default class GetUserReviewsTask extends TaskSequenceWithInitialize {
     return `Getting info for user ${this._userId}`;
   }
 
+  private _reviewFetcher: ReviewFetcher;
   private _userId: number;
 }
