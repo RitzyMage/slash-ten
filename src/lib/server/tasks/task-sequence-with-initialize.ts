@@ -1,4 +1,4 @@
-import { Status, type TaskDetails } from "$lib/server/tasks/task-info";
+import { Status, type TaskDetails } from "$lib/task-info";
 import Task from "./task";
 import type TaskObserver from "./task-observer";
 import TaskSequence from "./task-sequence";

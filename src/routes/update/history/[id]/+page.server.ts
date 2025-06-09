@@ -1,4 +1,4 @@
-import type { TaskDetails } from "$lib/server/tasks/task-info.js";
+import type { TaskDetails } from "$lib/task-info.js";
 import { db } from "$lib/server/db";
 import { updateHistory } from "$lib/server/db/schema";
 import { eq } from "drizzle-orm";

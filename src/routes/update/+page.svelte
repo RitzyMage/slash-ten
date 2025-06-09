@@ -2,7 +2,7 @@
   import H1 from "$lib/components/h1.svelte";
 
   import { onMount } from "svelte";
-  import { isComplete, type TaskDetails } from "$lib/server/tasks/task-info";
+  import { isComplete, type TaskDetails } from "$lib/task-info";
   import Button from "$lib/components/button.svelte";
   import axios from "axios";
   import UpdateDetails from "$lib/components/update-details.svelte";

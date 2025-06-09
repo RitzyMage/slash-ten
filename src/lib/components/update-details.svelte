@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Status, type TaskDetails } from "$lib/server/tasks/task-info";
+  import { Status, type TaskDetails } from "$lib/task-info";
   import UpdateDetails from "./update-details.svelte";
 
   export let details: TaskDetails;
