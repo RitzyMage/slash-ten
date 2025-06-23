@@ -28,7 +28,9 @@ export const users = pgTable(
 
 export const clients = pgTable("Client", {
   id: serial("id").primaryKey(),
-  bookId: integer("bookId").references(() => users.id),
+  userId: integer("userId")
+    .references(() => users.id)
+    .notNull(),
   name: text("name").notNull(),
 });
 
