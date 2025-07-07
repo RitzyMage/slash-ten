@@ -11,7 +11,7 @@ export default class GetUserReviewPageTask extends Task {
     page,
     reviewFetcher,
   }: {
-    userId: number;
+    userId: string;
     page: number;
     reviewFetcher: ReviewFetcher;
   }) {
@@ -48,7 +48,7 @@ export default class GetUserReviewPageTask extends Task {
     });
   }
 
-  private _userId: number;
+  private _userId: string;
   private _page: number;
   private _reviewFetcher: ReviewFetcher;
 }

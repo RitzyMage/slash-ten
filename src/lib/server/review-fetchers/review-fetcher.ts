@@ -25,5 +25,8 @@ export default interface ReviewFetcher {
   ): Promise<UserReviewsResult>;
 
   getUser(user: ID): Promise<User | null>;
+
   getOtherReviewers(url: string): Promise<User[]>;
+
+  getNumPages(userId: string): Promise<number>;
 }

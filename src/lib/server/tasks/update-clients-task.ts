@@ -3,9 +3,10 @@ import { db } from "../db";
 import type ReviewFetcher from "../review-fetchers/review-fetcher";
 import GetUserReviewsTask from "./get-user-reviews-task";
 import Task from "./task";
-import { clients } from "../db/schema";
+import { clients, users } from "../db/schema";
 
 import TaskSequenceWithInitialize from "./task-sequence-with-initialize";
+import { eq } from "drizzle-orm";
 
 const CHUNKS = 10;
 const TIME = 200;
@@ -17,12 +18,18 @@ export default class UpdateClientsTask extends TaskSequenceWithInitialize {
   }
 
   protected async GetSequence(): Promise<Task[]> {
-    let clientList = await db.select().from(clients);
+    let clientList = await db
+      .select()
+      .from(clients)
+      .innerJoin(users, eq(clients.userId, users.id));
 
     return clientList.map(
       (client) =>
         new GetUserReviewsTask({
-          userId: client.userId,
+          userInfo: {
+            name: client.Client.name,
+            id: client.User.externalId,
+          },
           reviewFetcher: this._reviewFetcher,
         })
     );

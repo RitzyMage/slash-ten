@@ -7,6 +7,14 @@ import { HTMLElement, parse } from "node-html-parser";
 const seriesRegex = / \(.+ #\d+(,\s*Part\s*\d+\s*of\s*\d+)?\)/g;
 
 export default class GoodreadsReviewFetcher implements ReviewFetcher {
+  async getNumPages(userId: string): Promise<number> {
+    let page = await this.getUserReviewHTML(userId, 1);
+    if (!page) {
+      throw new Error(`failure to get page count for user ${userId}`);
+    }
+    return this.parsePageCount(page, userId);
+  }
+
   async getUser(user: ID): Promise<User | null> {
     let firstPage = await this.getUserReviewHTML(user, 1, true);
     if (!firstPage) {
@@ -74,7 +82,11 @@ export default class GoodreadsReviewFetcher implements ReviewFetcher {
     }
   }
 
-  private async getUserReviewHTML(id: ID, page: number, loggedIn: boolean) {
+  private async getUserReviewHTML(
+    id: ID,
+    page: number,
+    loggedIn: boolean = true
+  ) {
     let response = await this.callAPI(
       `https://www.goodreads.com/review/list/${id}?page=${page}&shelf=read`,
       loggedIn

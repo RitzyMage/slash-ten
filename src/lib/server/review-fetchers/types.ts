@@ -15,3 +15,8 @@ export type Media = {
   id: string;
   title: string;
 };
+
+export type UserInfo = {
+  name: string;
+  id: string;
+};
