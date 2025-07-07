@@ -4,16 +4,10 @@ import { bookMetadata, externalLinks, media, reviews, users } from "./schema";
 import { db } from "./index";
 import type { BookMetadata, CreateUser, Media, Review, User } from "./types";
 
-export interface CreateMedia
-  extends Pick<Media, "externalId" | "mediaType" | "name"> {
-  metadata: {
-    author: string;
-    series: string | null;
-    seriesOrder: number | null;
-  };
+export type CreateMedia = Pick<Media, "externalId" | "name" | "mediaType"> & {
+  metadata: Pick<BookMetadata, "author" | "series" | "seriesOrder">;
   externalLinks: string[];
-  review: { score: number };
-}
+};
 
 class Database {
   // async getReviews(users: number[], media: number[]) {
@@ -169,12 +163,11 @@ class Database {
     await db.insert(reviews).values({ mediaId, userId, score });
   }
 
-  async addMedia(media: CreateMedia[], userId: number) {
+  async addMedia(media: CreateMedia[]) {
     for (let data of media) {
       let item = await this.UpsertMedia(data);
       await this.UpsertBookMetadata(item.id, data.metadata);
       await this.UpsertExternalLinks(item.id, data.externalLinks);
-      await this.UpsertReview(item.id, userId, data.review.score);
     }
     return true;
   }

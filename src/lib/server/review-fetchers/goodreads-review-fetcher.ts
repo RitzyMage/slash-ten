@@ -1,8 +1,9 @@
 import axios from "axios";
 import type ReviewFetcher from "./review-fetcher";
-import type { BookMetadata, MediaTemp } from "./review-fetcher";
-import type { ID, User, Review, Media } from "./types";
+import type { ID, User, Review } from "./types";
 import { HTMLElement, parse } from "node-html-parser";
+import type { CreateMedia } from "../db/database";
+import type { BookMetadata } from "../db/types";
 
 const seriesRegex = / \(.+ #\d+(,\s*Part\s*\d+\s*of\s*\d+)?\)/g;
 
@@ -34,27 +35,6 @@ export default class GoodreadsReviewFetcher implements ReviewFetcher {
     await new Promise((res) => setTimeout(res, 10));
   }
 
-  async getUserReviews(
-    userId: ID,
-    page: number
-  ): Promise<{
-    reviews: Review[];
-    media: MediaTemp[];
-    nextPage: number | null;
-    numPages: number;
-  }> {
-    try {
-      let results = await this.fetchUserPage(page, userId);
-      let nextPage =
-        !results.numPages || results.numPages <= page ? null : page + 1;
-      return { ...results, nextPage };
-    } catch (e) {
-      console.error("error parsing page");
-      console.error(e);
-      return { reviews: [], media: [], nextPage: null, numPages: 0 };
-    }
-  }
-
   async getOtherReviewers(url: string): Promise<User[]> {
     let users: User[] = [];
     let document = await this.getBookHTML(url);
@@ -67,20 +47,12 @@ export default class GoodreadsReviewFetcher implements ReviewFetcher {
     return users;
   }
 
-  private async fetchUserPage(i: number, userId: ID) {
-    console.log(`\tgetting page ${i} for ${userId}`);
+  async getUserReviews(i: number, userId: ID) {
     let page = await this.getUserReviewHTML(userId, i);
     if (!page) {
-      console.error(`failure to get page ${i} for user ${userId}`);
-      return { reviews: [], media: [], numPages: 0 };
+      throw new Error(`failed to get page ${i} for user ${userId}`);
     }
-    let numPages = this.parsePageCount(page, userId);
-    console.log(`\tgot page ${i} of ${numPages} for ${userId}`);
-    try {
-      return { ...this.parseReviews(page, userId), numPages };
-    } catch (e) {
-      return { reviews: [], media: [], numPages };
-    }
+    return { ...this.parseReviews(page, userId) };
   }
 
   private async getUserReviewHTML(id: ID, page: number) {
@@ -165,7 +137,7 @@ export default class GoodreadsReviewFetcher implements ReviewFetcher {
   private parseReviews(
     document: HTMLElement,
     userId: ID
-  ): { reviews: Review[]; media: MediaTemp[] } {
+  ): { reviews: Review[]; media: CreateMedia[] } {
     let elements = [...document.querySelectorAll("tr.review")];
     let userReviews = elements.map((element) => ({
       title: element
@@ -193,18 +165,24 @@ export default class GoodreadsReviewFetcher implements ReviewFetcher {
       },
       [] as Review[]
     );
-    let media: MediaTemp[] = userReviews.map(({ title, author, url }) => {
+    let media: CreateMedia[] = userReviews.map(({ title, author, url }) => {
       let { name, seriesName, seriesNumber } = this.parseName(title);
-      let metadata: BookMetadata = { author };
+      let metadata: Pick<BookMetadata, "author" | "series" | "seriesOrder"> = {
+        author,
+        seriesOrder: null,
+        series: null,
+      };
       if (seriesNumber) {
         metadata = {
           author,
-          series: { name: seriesName, order: seriesNumber },
+          series: seriesName,
+          seriesOrder: seriesNumber,
         };
       }
       return {
-        title: name,
-        id: this.getId({ author, title }),
+        name,
+        mediaType: "BOOK",
+        externalId: this.getId({ author, title }),
         metadata,
         externalLinks: [url],
       };

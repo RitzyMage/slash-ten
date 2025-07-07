@@ -1,4 +1,5 @@
 import { Status } from "$lib/task-info";
+import Database from "../db/database";
 import type ReviewFetcher from "../review-fetchers/review-fetcher";
 import Task from "./task";
 
@@ -39,7 +40,7 @@ export default class GetUserReviewPageTask extends Task {
       completion: 0.7,
     });
 
-    await new Promise((res) => setTimeout(res, 200));
+    await this._database.addMedia(reviews.media);
 
     this.updateStatus({
       status: Status.SUCCESSFUL,
@@ -51,4 +52,5 @@ export default class GetUserReviewPageTask extends Task {
   private _userId: string;
   private _page: number;
   private _reviewFetcher: ReviewFetcher;
+  private _database = new Database();
 }

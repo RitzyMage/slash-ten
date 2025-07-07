@@ -6,6 +6,7 @@ abstract class Task {
     try {
       await this._Run();
     } catch (e) {
+      console.error(e);
       this.updateStatus({
         status: Status.FAILED,
         message: `exception thrown: ${e?.toString()}`,
