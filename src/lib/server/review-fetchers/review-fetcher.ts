@@ -1,13 +1,12 @@
-import type { CreateMedia } from "../db/database";
-import type { ID, Media, User, Review } from "./types";
+import type { CreateMedia, CreateReview } from "../db/database";
 
 interface UserReviewsResult {
-  reviews: Review[];
+  reviews: CreateReview[];
   media: CreateMedia[];
 }
 
 export default interface ReviewFetcher {
-  getUserReviews(userId: ID, page: number): Promise<UserReviewsResult>;
+  getUserReviews(userId: string, page: number): Promise<UserReviewsResult>;
 
   // getUser(user: ID): Promise<User | null>;
 

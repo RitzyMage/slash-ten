@@ -26,10 +26,9 @@ export default class UpdateClientsTask extends TaskSequenceWithInitialize {
     return clientList.map(
       (client) =>
         new GetUserReviewsTask({
-          userInfo: {
-            name: client.Client.name,
-            id: client.User.externalId,
-          },
+          username: client.Client.name,
+          externalUserId: client.User.externalId,
+          userId: client.User.id,
           reviewFetcher: this._reviewFetcher,
         })
     );

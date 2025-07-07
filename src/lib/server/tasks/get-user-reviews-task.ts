@@ -1,21 +1,26 @@
 import { Status } from "$lib/task-info";
 import type ReviewFetcher from "../review-fetchers/review-fetcher";
-import type { UserInfo } from "../review-fetchers/types";
 import GetUserReviewPageTask from "./get-user-review-page-task";
 import type Task from "./task";
 import TaskSequenceWithInitialize from "./task-sequence-with-initialize";
 
 export default class GetUserReviewsTask extends TaskSequenceWithInitialize {
   constructor({
-    userInfo,
+    userId,
+    externalUserId,
     reviewFetcher,
+    username,
   }: {
-    userInfo: UserInfo;
+    userId: number;
+    externalUserId: string;
     reviewFetcher: ReviewFetcher;
+    username: string;
   }) {
     super();
-    this._userInfo = userInfo;
+    this._externalUserId = externalUserId;
+    this._userId = userId;
     this._reviewFetcher = reviewFetcher;
+    this._username = username;
   }
 
   protected async GetSequence(): Promise<Task[]> {
@@ -24,7 +29,7 @@ export default class GetUserReviewsTask extends TaskSequenceWithInitialize {
       message: `${this.prefix}: Fetching number of pages for user`,
       completion: 0,
     });
-    let numPages = await this._reviewFetcher.getNumPages(this._userInfo.id);
+    let numPages = await this._reviewFetcher.getNumPages(this._externalUserId);
     this.updateStatus({
       status: Status.IN_PROGRESS,
       message: `${this.prefix}: Fetched number of pages`,
@@ -35,7 +40,8 @@ export default class GetUserReviewsTask extends TaskSequenceWithInitialize {
     return pagesToFetch.map(
       (page) =>
         new GetUserReviewPageTask({
-          userId: this._userInfo.id,
+          externalUserId: this._externalUserId,
+          userId: this._userId,
           page,
           reviewFetcher: this._reviewFetcher,
         })
@@ -43,9 +49,11 @@ export default class GetUserReviewsTask extends TaskSequenceWithInitialize {
   }
 
   protected get prefix(): string {
-    return `Getting info for user ${this._userInfo.name}`;
+    return `Getting info for user ${this._username}`;
   }
 
   private _reviewFetcher: ReviewFetcher;
-  private _userInfo: UserInfo;
+  private _userId: number;
+  private _externalUserId: string;
+  private _username: string;
 }

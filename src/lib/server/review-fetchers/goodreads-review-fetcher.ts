@@ -1,9 +1,13 @@
 import axios from "axios";
 import type ReviewFetcher from "./review-fetcher";
-import type { ID, User, Review } from "./types";
 import { HTMLElement, parse } from "node-html-parser";
-import type { CreateMedia } from "../db/database";
+import type { CreateMedia, CreateReview } from "../db/database";
 import type { BookMetadata } from "../db/types";
+
+type User = {
+  id: string;
+  name: string;
+};
 
 const seriesRegex = / \(.+ #\d+(,\s*Part\s*\d+\s*of\s*\d+)?\)/g;
 
@@ -16,19 +20,6 @@ export default class GoodreadsReviewFetcher implements ReviewFetcher {
       throw new Error(`failure to get page count for user ${userId}`);
     }
     return this.parsePageCount(page, userId);
-  }
-
-  async getUser(user: ID): Promise<User | null> {
-    let firstPage = await this.getUserReviewHTML(user, 1);
-    if (!firstPage) {
-      console.error(`could not get page for ${user}`);
-      return null;
-    }
-    let username = this.parseUsername(firstPage, user);
-    return {
-      id: user,
-      name: username,
-    };
   }
 
   async artificialDelay() {
@@ -47,7 +38,7 @@ export default class GoodreadsReviewFetcher implements ReviewFetcher {
     return users;
   }
 
-  async getUserReviews(userId: number, page: number) {
+  async getUserReviews(userId: string, page: number) {
     let pageHTML = await this.getUserReviewHTML(userId, page);
     if (!pageHTML) {
       throw new Error(`failed to get page ${page} for user ${userId}`);
@@ -55,7 +46,7 @@ export default class GoodreadsReviewFetcher implements ReviewFetcher {
     return { ...this.parseReviews(pageHTML, userId) };
   }
 
-  private async getUserReviewHTML(id: ID, page: number) {
+  private async getUserReviewHTML(id: string, page: number) {
     let response = await this.callAPI(
       `https://www.goodreads.com/review/list/${id}?page=${page}&shelf=read`
     );
@@ -78,13 +69,13 @@ export default class GoodreadsReviewFetcher implements ReviewFetcher {
       case 0:
         return null;
       case 1:
-        return 1;
+        return 2;
       case 2:
-        return 3;
+        return 4;
       case 3:
-        return 5;
+        return 6;
       case 4:
-        return 7;
+        return 8;
       case 5:
         return 10;
       default:
@@ -92,7 +83,7 @@ export default class GoodreadsReviewFetcher implements ReviewFetcher {
     }
   }
 
-  private parsePageCount(document: HTMLElement, id: ID): number {
+  private parsePageCount(document: HTMLElement, id: string): number {
     let pages = [...document.querySelectorAll("#reviewPagination a")]
       .map((a) => parseInt(a.text))
       .filter((num) => !!num);
@@ -116,14 +107,6 @@ export default class GoodreadsReviewFetcher implements ReviewFetcher {
     }
   }
 
-  private parseUsername(document: HTMLElement, id: ID): string {
-    let name = document.querySelector("#header > h1:first-child > a")?.text;
-    if (!name) {
-      throw new Error(`could not parse username for ${id}!`);
-    }
-    return name;
-  }
-
   private parseUsers(document: HTMLElement): User[] {
     let reviewCards = [
       ...document.querySelectorAll(".ReviewCard .ReviewerProfile__name a"),
@@ -136,8 +119,8 @@ export default class GoodreadsReviewFetcher implements ReviewFetcher {
 
   private parseReviews(
     document: HTMLElement,
-    userId: ID
-  ): { reviews: Review[]; media: CreateMedia[] } {
+    userId: string
+  ): { reviews: CreateReview[]; media: CreateMedia[] } {
     let elements = [...document.querySelectorAll("tr.review")];
     let userReviews = elements.map((element) => ({
       title: element
@@ -151,19 +134,18 @@ export default class GoodreadsReviewFetcher implements ReviewFetcher {
         .replace(/\s+/g, " "),
       stars: element.querySelectorAll(".staticStar.p10").length,
     }));
-    let reviews: Review[] = userReviews.reduce(
+    let reviews: CreateReview[] = userReviews.reduce(
       (all, { stars, url, title, author }) => {
         let score = this.starsToOutOf10(stars);
         if (score !== null) {
           all.push({
             score,
-            user: userId,
-            media: this.getId({ author, title }),
+            mediaExternalId: this.getId({ author, title }),
           });
         }
         return all;
       },
-      [] as Review[]
+      [] as CreateReview[]
     );
     let media: CreateMedia[] = userReviews.map(({ title, author, url }) => {
       let { name, seriesName, seriesNumber } = this.parseName(title);

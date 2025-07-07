@@ -9,6 +9,10 @@ export type CreateMedia = Pick<Media, "externalId" | "name" | "mediaType"> & {
   externalLinks: string[];
 };
 
+export type CreateReview = Pick<Review, "score"> & {
+  mediaExternalId: string;
+};
+
 class Database {
   // async getReviews(users: number[], media: number[]) {
   //   return await db
@@ -164,12 +168,32 @@ class Database {
   }
 
   async addMedia(media: CreateMedia[]) {
+    let addedMedia: Media[] = [];
     for (let data of media) {
       let item = await this.UpsertMedia(data);
+      addedMedia.push(item);
       await this.UpsertBookMetadata(item.id, data.metadata);
       await this.UpsertExternalLinks(item.id, data.externalLinks);
     }
-    return true;
+    return addedMedia;
+  }
+
+  async addReviews(userId: number, toCreate: CreateReview[], media: Media[]) {
+    let mediaByExternalId = keyBy(media, "externalId");
+    for (let review of toCreate) {
+      let mediaId = mediaByExternalId[review.mediaExternalId].id;
+      await db
+        .insert(reviews)
+        .values({
+          mediaId,
+          score: review.score,
+          userId,
+        })
+        .onConflictDoUpdate({
+          target: [reviews.mediaId, reviews.userId],
+          set: { score: review.score },
+        });
+    }
   }
 
   async getValidReviews(
