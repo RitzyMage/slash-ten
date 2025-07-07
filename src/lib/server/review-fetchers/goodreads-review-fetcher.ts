@@ -7,6 +7,8 @@ import { HTMLElement, parse } from "node-html-parser";
 const seriesRegex = / \(.+ #\d+(,\s*Part\s*\d+\s*of\s*\d+)?\)/g;
 
 export default class GoodreadsReviewFetcher implements ReviewFetcher {
+  readonly serviceName: string = "Goodreads";
+
   async getNumPages(userId: string): Promise<number> {
     let page = await this.getUserReviewHTML(userId, 1);
     if (!page) {
@@ -16,7 +18,7 @@ export default class GoodreadsReviewFetcher implements ReviewFetcher {
   }
 
   async getUser(user: ID): Promise<User | null> {
-    let firstPage = await this.getUserReviewHTML(user, 1, true);
+    let firstPage = await this.getUserReviewHTML(user, 1);
     if (!firstPage) {
       console.error(`could not get page for ${user}`);
       return null;
@@ -34,8 +36,7 @@ export default class GoodreadsReviewFetcher implements ReviewFetcher {
 
   async getUserReviews(
     userId: ID,
-    page: number,
-    { loggedIn }: { loggedIn: boolean }
+    page: number
   ): Promise<{
     reviews: Review[];
     media: MediaTemp[];
@@ -43,7 +44,7 @@ export default class GoodreadsReviewFetcher implements ReviewFetcher {
     numPages: number;
   }> {
     try {
-      let results = await this.fetchUserPage(page, userId, loggedIn);
+      let results = await this.fetchUserPage(page, userId);
       let nextPage =
         !results.numPages || results.numPages <= page ? null : page + 1;
       return { ...results, nextPage };
@@ -66,9 +67,9 @@ export default class GoodreadsReviewFetcher implements ReviewFetcher {
     return users;
   }
 
-  private async fetchUserPage(i: number, userId: ID, loggedIn: boolean) {
+  private async fetchUserPage(i: number, userId: ID) {
     console.log(`\tgetting page ${i} for ${userId}`);
-    let page = await this.getUserReviewHTML(userId, i, loggedIn);
+    let page = await this.getUserReviewHTML(userId, i);
     if (!page) {
       console.error(`failure to get page ${i} for user ${userId}`);
       return { reviews: [], media: [], numPages: 0 };
@@ -82,14 +83,9 @@ export default class GoodreadsReviewFetcher implements ReviewFetcher {
     }
   }
 
-  private async getUserReviewHTML(
-    id: ID,
-    page: number,
-    loggedIn: boolean = true
-  ) {
+  private async getUserReviewHTML(id: ID, page: number) {
     let response = await this.callAPI(
-      `https://www.goodreads.com/review/list/${id}?page=${page}&shelf=read`,
-      loggedIn
+      `https://www.goodreads.com/review/list/${id}?page=${page}&shelf=read`
     );
     if (!response) {
       return null;
@@ -98,7 +94,7 @@ export default class GoodreadsReviewFetcher implements ReviewFetcher {
   }
 
   private async getBookHTML(url: string) {
-    let response = await this.callAPI(`https://www.goodreads.com${url}`, false);
+    let response = await this.callAPI(`https://www.goodreads.com${url}`);
     if (!response) {
       return null;
     }
@@ -135,18 +131,13 @@ export default class GoodreadsReviewFetcher implements ReviewFetcher {
     return lastPage;
   }
 
-  private async callAPI(url: string, loggedIn: boolean) {
+  private async callAPI(url: string) {
     try {
-      return await axios.get(
-        url,
-        loggedIn
-          ? {
-              headers: {
-                Cookie: "",
-              },
-            }
-          : undefined
-      );
+      return await axios.get(url, {
+        headers: {
+          Cookie: "",
+        },
+      });
     } catch (e) {
       console.log(`failure on ${url}`);
       return null;

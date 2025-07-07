@@ -18,15 +18,13 @@ interface UserReviewsResult {
 }
 
 export default interface ReviewFetcher {
-  getUserReviews(
-    userId: ID,
-    page: number,
-    params?: Record<string, boolean | number | string>
-  ): Promise<UserReviewsResult>;
+  getUserReviews(userId: ID, page: number): Promise<UserReviewsResult>;
 
-  getUser(user: ID): Promise<User | null>;
+  // getUser(user: ID): Promise<User | null>;
 
-  getOtherReviewers(url: string): Promise<User[]>;
+  // getOtherReviewers(url: string): Promise<User[]>;
 
   getNumPages(userId: string): Promise<number>;
+
+  readonly serviceName: string;
 }

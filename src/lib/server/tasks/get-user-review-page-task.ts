@@ -25,25 +25,25 @@ export default class GetUserReviewPageTask extends Task {
     // IMPLEMENT I: get user reviews, add to database
     this.updateStatus({
       status: Status.IN_PROGRESS,
-      message: `Get User ${this._userId} page ${this._page} started`,
+      message: `Get User ${this._userId} page ${this._page} calling ${this._reviewFetcher.serviceName} API`,
       completion: 0,
     });
 
-    for (let i = 0; i < CHUNKS; ++i) {
-      await new Promise((res) => setTimeout(res, TEST_TIME / CHUNKS));
-      let timeLeft = ((1 - i / CHUNKS) * TEST_TIME) / 1000;
-      this.updateStatus({
-        status: Status.IN_PROGRESS,
-        message: `Get User ${this._userId} page ${
-          this._page
-        } (${timeLeft.toFixed(2)}s left)`,
-        completion: i / CHUNKS,
-      });
-    }
+    let reviews = await this._reviewFetcher.getUserReviews(
+      this._userId,
+      this._page
+    );
+    this.updateStatus({
+      status: Status.IN_PROGRESS,
+      message: `Get User ${this._userId} page ${this._page}, inserting into database...`,
+      completion: 0.7,
+    });
+
+    await new Promise((res) => setTimeout(res, 200));
 
     this.updateStatus({
       status: Status.SUCCESSFUL,
-      message: `Get User ${this._userId} page ${this._page}`,
+      message: `Got User ${this._userId} page ${this._page}`,
       completion: 1,
     });
   }
