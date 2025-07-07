@@ -83,6 +83,7 @@ export const media = pgTable(
     externalId: text("externalId").notNull(),
     name: text("name").notNull(),
     mediaType: mediaTypeEnum("mediaType").notNull(),
+    nextUpdateOn: timestamp("nextUpdateOn"),
   },
   (media) => [
     unique("media_external_mediaType").on(media.externalId, media.mediaType),
@@ -110,19 +111,15 @@ export const reviews = pgTable(
   ]
 );
 
-export const bookMetadata = pgTable(
-  "BookMetadata",
-  {
-    mediaId: integer("mediaId")
-      .notNull()
-      .references(() => media.id, { onDelete: "cascade" }),
-
-    author: text("author").notNull(),
-    series: text("series"),
-    seriesOrder: integer("seriesOrder"),
-  },
-  (book) => [primaryKey(book.mediaId)]
-);
+export const bookMetadata = pgTable("BookMetadata", {
+  mediaId: integer("mediaId")
+    .notNull()
+    .references(() => media.id, { onDelete: "cascade" })
+    .primaryKey(),
+  author: text("author").notNull(),
+  series: text("series"),
+  seriesOrder: integer("seriesOrder"),
+});
 
 export const externalLinks = pgTable("ExternalLink", {
   id: serial("id").primaryKey(),
