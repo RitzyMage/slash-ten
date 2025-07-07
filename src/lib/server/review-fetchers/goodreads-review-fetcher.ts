@@ -47,12 +47,12 @@ export default class GoodreadsReviewFetcher implements ReviewFetcher {
     return users;
   }
 
-  async getUserReviews(i: number, userId: ID) {
-    let page = await this.getUserReviewHTML(userId, i);
-    if (!page) {
-      throw new Error(`failed to get page ${i} for user ${userId}`);
+  async getUserReviews(userId: number, page: number) {
+    let pageHTML = await this.getUserReviewHTML(userId, page);
+    if (!pageHTML) {
+      throw new Error(`failed to get page ${page} for user ${userId}`);
     }
-    return { ...this.parseReviews(page, userId) };
+    return { ...this.parseReviews(pageHTML, userId) };
   }
 
   private async getUserReviewHTML(id: ID, page: number) {
