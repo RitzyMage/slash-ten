@@ -5,16 +5,19 @@ import Task from "./task";
 const TEST_TIME = 200;
 const CHUNKS = 10;
 
-export default class GetBookReviewersTask extends Task {
+export default class GetMediaReviewersTask extends Task {
   constructor({
-    bookId,
+    mediaId,
+    mediaExternalId,
     reviewFetcher,
   }: {
-    bookId: number;
+    mediaId: number;
+    mediaExternalId: string;
     reviewFetcher: ReviewFetcher;
   }) {
     super();
-    this._bookId = bookId;
+    this._mediaId = mediaId;
+    this._mediaExternalId = mediaExternalId;
     this._reviewFetcher = reviewFetcher;
   }
 
@@ -22,7 +25,7 @@ export default class GetBookReviewersTask extends Task {
     // IMPLEMENT II: get user reviews for book
     this.updateStatus({
       status: Status.IN_PROGRESS,
-      message: `Get Book ${this._bookId} started`,
+      message: `Get Book ${this._mediaId} started`,
       completion: 0,
     });
 
@@ -31,18 +34,19 @@ export default class GetBookReviewersTask extends Task {
       let timeLeft = ((1 - i / CHUNKS) * TEST_TIME) / 1000;
       this.updateStatus({
         status: Status.IN_PROGRESS,
-        message: `Get Book ${this._bookId} (${timeLeft.toFixed(2)}s left)`,
+        message: `Get Book ${this._mediaId} (${timeLeft.toFixed(2)}s left)`,
         completion: i / CHUNKS,
       });
     }
 
     this.updateStatus({
       status: Status.SUCCESSFUL,
-      message: `Get Book ${this._bookId}`,
+      message: `Get Book ${this._mediaId}`,
       completion: 1,
     });
   }
 
-  private _bookId: number;
+  private _mediaId: number;
+  private _mediaExternalId: string;
   private _reviewFetcher: ReviewFetcher;
 }

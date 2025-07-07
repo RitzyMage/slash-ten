@@ -1,8 +1,15 @@
 import { keyBy } from "$lib/util";
-import { eq, inArray, and, sql } from "drizzle-orm";
+import { eq, inArray, and, sql, or, isNull, lt } from "drizzle-orm";
 import { bookMetadata, externalLinks, media, reviews, users } from "./schema";
 import { db } from "./index";
-import type { BookMetadata, CreateUser, Media, Review, User } from "./types";
+import type {
+  BookMetadata,
+  CreateUser,
+  Media,
+  MediaType,
+  Review,
+  User,
+} from "./types";
 
 export type CreateMedia = Pick<Media, "externalId" | "name" | "mediaType"> & {
   metadata: Pick<BookMetadata, "author" | "series" | "seriesOrder">;
@@ -194,6 +201,18 @@ class Database {
           set: { score: review.score },
         });
     }
+  }
+
+  async getStaleMedia(type: MediaType) {
+    return await db
+      .select()
+      .from(media)
+      .where(
+        and(
+          eq(media.mediaType, type),
+          or(isNull(media.nextUpdateOn), lt(media.nextUpdateOn, new Date()))
+        )
+      );
   }
 
   async getValidReviews(

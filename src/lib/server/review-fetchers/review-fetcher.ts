@@ -1,4 +1,5 @@
 import type { CreateMedia, CreateReview } from "../db/database";
+import type { MediaType } from "../db/types";
 
 interface UserReviewsResult {
   reviews: CreateReview[];
@@ -15,4 +16,5 @@ export default interface ReviewFetcher {
   getNumPages(userId: string): Promise<number>;
 
   readonly serviceName: string;
+  readonly mediaType: MediaType;
 }

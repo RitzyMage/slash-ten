@@ -1,5 +1,5 @@
 import { Status } from "$lib/task-info";
-import GetBookReviewersTask from "./get-book-reviewers-task";
+import GetMediaReviewersTask from "./get-media-reviewers-task";
 import GetUserReviewsTask from "./get-user-reviews-task";
 import Task from "./task";
 import TaskSequenceWithInitialize from "./task-sequence-with-initialize";

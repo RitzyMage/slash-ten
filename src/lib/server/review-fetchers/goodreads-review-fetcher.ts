@@ -12,6 +12,7 @@ type User = {
 const seriesRegex = / \(.+ #\d+(,\s*Part\s*\d+\s*of\s*\d+)?\)/g;
 
 export default class GoodreadsReviewFetcher implements ReviewFetcher {
+  readonly mediaType = "BOOK";
   readonly serviceName: string = "Goodreads";
 
   async getNumPages(userId: string): Promise<number> {
