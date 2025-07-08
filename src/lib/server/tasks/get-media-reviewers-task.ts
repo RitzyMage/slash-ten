@@ -1,4 +1,5 @@
 import { Status } from "$lib/task-info";
+import { randomDateInRange, YEAR } from "../date-utils/date-ranges";
 import Database from "../db/database";
 import type ReviewFetcher from "../review-fetchers/review-fetcher";
 import Task from "./task";
@@ -42,7 +43,10 @@ export default class GetMediaReviewersTask extends Task {
       }))
     );
 
-    // update stale
+    await this._database.updateMediaNextUpdate(
+      this._mediaId,
+      randomDateInRange(YEAR)
+    );
 
     this.updateStatus({
       status: Status.SUCCESSFUL,

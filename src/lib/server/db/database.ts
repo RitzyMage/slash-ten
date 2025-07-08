@@ -239,6 +239,10 @@ class Database {
       .groupBy(media.id)) as { id: number; link: string }[];
   }
 
+  async updateMediaNextUpdate(id: number, date: Date) {
+    await db.update(media).set({ nextUpdateOn: date }).where(eq(media.id, id));
+  }
+
   async getValidReviews(
     userId: number,
     minCommon: number,
