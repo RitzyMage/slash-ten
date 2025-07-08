@@ -1,4 +1,5 @@
 import { Status } from "$lib/task-info";
+import Database from "../db/database";
 import type ReviewFetcher from "../review-fetchers/review-fetcher";
 import Task from "./task";
 
@@ -29,12 +30,17 @@ export default class GetMediaReviewersTask extends Task {
       completion: 0,
     });
 
-    const reviews = await this._reviewFetcher.getMediaReviewers(
+    const reviewers = await this._reviewFetcher.getMediaReviewers(
       this._mediaLink
     );
-    console.log(reviews);
 
-    // add reviewers
+    await this._database.addUsers(
+      reviewers.map((_) => ({
+        externalId: _.id,
+        mediaType: this._reviewFetcher.mediaType,
+        name: _.name,
+      }))
+    );
 
     // update stale
 
@@ -48,4 +54,5 @@ export default class GetMediaReviewersTask extends Task {
   private _mediaId: number;
   private _mediaLink: string;
   private _reviewFetcher: ReviewFetcher;
+  private _database: Database = new Database();
 }

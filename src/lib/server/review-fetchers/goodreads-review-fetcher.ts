@@ -27,7 +27,9 @@ export default class GoodreadsReviewFetcher implements ReviewFetcher {
     await new Promise((res) => setTimeout(res, 10));
   }
 
-  async getMediaReviewers(mediaId: string): Promise<unknown[]> {
+  async getMediaReviewers(
+    mediaId: string
+  ): Promise<{ name: string; id: string }[]> {
     let users: User[] = [];
     let document = await this.getBookHTML(mediaId);
     if (!document) {

@@ -113,6 +113,19 @@ class Database {
     return inserted[0];
   }
 
+  private async UpsertUser(data: CreateUser) {
+    const inserted = await db
+      .insert(users)
+      .values(data)
+      .onConflictDoUpdate({
+        target: [users.externalId, users.mediaType],
+        set: { name: data.name },
+      })
+      .returning();
+
+    return inserted[0];
+  }
+
   private async UpsertBookMetadata(
     mediaId: number,
     data: Omit<BookMetadata, "mediaId">
@@ -183,6 +196,15 @@ class Database {
       await this.UpsertExternalLinks(item.id, data.externalLinks);
     }
     return addedMedia;
+  }
+
+  async addUsers(media: CreateUser[]) {
+    let addedUsers: User[] = [];
+    for (let data of media) {
+      let item = await this.UpsertUser(data);
+      addedUsers.push(item);
+    }
+    return addedUsers;
   }
 
   async addReviews(userId: number, toCreate: CreateReview[], media: Media[]) {

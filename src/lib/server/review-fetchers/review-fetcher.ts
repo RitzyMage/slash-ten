@@ -11,7 +11,7 @@ export default interface ReviewFetcher {
 
   // getUser(user: ID): Promise<User | null>;
 
-  getMediaReviewers(mediaId: string): Promise<unknown[]>;
+  getMediaReviewers(mediaId: string): Promise<{ id: string; name: string }[]>;
 
   getNumPages(userId: string): Promise<number>;
 
