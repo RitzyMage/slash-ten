@@ -25,7 +25,7 @@ export default class GetMediaReviewersTask extends Task {
     // IMPLEMENT II: get user reviews for book
     this.updateStatus({
       status: Status.IN_PROGRESS,
-      message: `Get Book ${this._mediaId} started`,
+      message: `Get Reviewers for Book ${this._mediaId} started`,
       completion: 0,
     });
 
@@ -34,14 +34,16 @@ export default class GetMediaReviewersTask extends Task {
       let timeLeft = ((1 - i / CHUNKS) * TEST_TIME) / 1000;
       this.updateStatus({
         status: Status.IN_PROGRESS,
-        message: `Get Book ${this._mediaId} (${timeLeft.toFixed(2)}s left)`,
+        message: `Get Reviewers for Book ${this._mediaId} (${timeLeft.toFixed(
+          2
+        )}s left)`,
         completion: i / CHUNKS,
       });
     }
 
     this.updateStatus({
       status: Status.SUCCESSFUL,
-      message: `Get Book ${this._mediaId}`,
+      message: `Got Reviewers for Book ${this._mediaId}`,
       completion: 1,
     });
   }

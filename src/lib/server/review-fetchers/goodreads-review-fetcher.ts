@@ -95,11 +95,14 @@ export default class GoodreadsReviewFetcher implements ReviewFetcher {
     return lastPage;
   }
 
-  private async callAPI(url: string) {
+  private async callAPI(
+    url: string,
+    { loggedIn = false }: { loggedIn?: boolean } = {}
+  ) {
     try {
       return await axios.get(url, {
         headers: {
-          Cookie: "",
+          Cookie: loggedIn ? "cookie" : "",
         },
       });
     } catch (e) {
