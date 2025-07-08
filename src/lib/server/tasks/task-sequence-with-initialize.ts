@@ -18,6 +18,15 @@ export default abstract class TaskSequenceWithInitialize
       status: Status.STARTED,
     });
     let tasks = await this.GetSequence();
+    if (tasks.length === 0) {
+      this.updateStatus({
+        completion: 1,
+        message: `${this.prefix}: done initializing, no subtasks`,
+        status: Status.SUCCESSFUL,
+      });
+      return;
+    }
+
     this.updateStatus({
       completion: 0,
       message: `${this.prefix}: done initializing, starting sequence`,
