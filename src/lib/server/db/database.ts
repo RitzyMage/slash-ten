@@ -1,5 +1,5 @@
 import { keyBy } from "$lib/util";
-import { eq, inArray, and, sql, or, isNull, lt } from "drizzle-orm";
+import { eq, inArray, and, sql, or, isNull, lt, min } from "drizzle-orm";
 import { bookMetadata, externalLinks, media, reviews, users } from "./schema";
 import { db } from "./index";
 import type {
@@ -204,15 +204,17 @@ class Database {
   }
 
   async getStaleMedia(type: MediaType) {
-    return await db
-      .select()
+    return (await db
+      .select({ id: media.id, link: min(externalLinks.link) })
       .from(media)
       .where(
         and(
           eq(media.mediaType, type),
           or(isNull(media.nextUpdateOn), lt(media.nextUpdateOn, new Date()))
         )
-      );
+      )
+      .innerJoin(externalLinks, eq(media.id, externalLinks.mediaId))
+      .groupBy(media.id)) as { id: number; link: string }[];
   }
 
   async getValidReviews(

@@ -8,16 +8,16 @@ const CHUNKS = 10;
 export default class GetMediaReviewersTask extends Task {
   constructor({
     mediaId,
-    mediaExternalId,
+    mediaLink,
     reviewFetcher,
   }: {
     mediaId: number;
-    mediaExternalId: string;
+    mediaLink: string;
     reviewFetcher: ReviewFetcher;
   }) {
     super();
     this._mediaId = mediaId;
-    this._mediaExternalId = mediaExternalId;
+    this._mediaLink = mediaLink;
     this._reviewFetcher = reviewFetcher;
   }
 
@@ -29,17 +29,14 @@ export default class GetMediaReviewersTask extends Task {
       completion: 0,
     });
 
-    for (let i = 0; i < CHUNKS; ++i) {
-      await new Promise((res) => setTimeout(res, TEST_TIME / CHUNKS));
-      let timeLeft = ((1 - i / CHUNKS) * TEST_TIME) / 1000;
-      this.updateStatus({
-        status: Status.IN_PROGRESS,
-        message: `Get Reviewers for Book ${this._mediaId} (${timeLeft.toFixed(
-          2
-        )}s left)`,
-        completion: i / CHUNKS,
-      });
-    }
+    const reviews = await this._reviewFetcher.getMediaReviewers(
+      this._mediaLink
+    );
+    console.log(reviews);
+
+    // add reviewers
+
+    // update stale
 
     this.updateStatus({
       status: Status.SUCCESSFUL,
@@ -49,6 +46,6 @@ export default class GetMediaReviewersTask extends Task {
   }
 
   private _mediaId: number;
-  private _mediaExternalId: string;
+  private _mediaLink: string;
   private _reviewFetcher: ReviewFetcher;
 }

@@ -22,7 +22,7 @@ export default class UpdateBooksTask extends TaskSequenceWithInitialize {
       (media) =>
         new GetMediaReviewersTask({
           mediaId: media.id,
-          mediaExternalId: media.externalId,
+          mediaLink: media.link,
           reviewFetcher: this._reviewFetcher,
         })
     );

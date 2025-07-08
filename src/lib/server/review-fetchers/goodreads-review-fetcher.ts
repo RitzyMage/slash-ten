@@ -27,11 +27,11 @@ export default class GoodreadsReviewFetcher implements ReviewFetcher {
     await new Promise((res) => setTimeout(res, 10));
   }
 
-  async getOtherReviewers(url: string): Promise<User[]> {
+  async getMediaReviewers(mediaId: string): Promise<unknown[]> {
     let users: User[] = [];
-    let document = await this.getBookHTML(url);
+    let document = await this.getBookHTML(mediaId);
     if (!document) {
-      console.error(`could not get reviewers for ${url}`);
+      throw new Error(`could not get reviewers for ${mediaId}`);
     } else {
       let newUsers = this.parseUsers(document);
       users = users.concat(newUsers);
