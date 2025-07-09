@@ -8,9 +8,9 @@ import GoodreadsReviewFetcher from "../review-fetchers/goodreads-review-fetcher"
 export default async function GetUpdateTask() {
   let reviewFetcher = new GoodreadsReviewFetcher();
   return new TaskSequence([
-    new UpdateClientsTask({ reviewFetcher }),
-    new UpdateBooksTask({ reviewFetcher }),
-    new UpdateUsersTask(),
-    new UpdateSimilarityTask(),
+    // new UpdateClientsTask({ reviewFetcher }),
+    // new UpdateBooksTask({ reviewFetcher }),
+    new UpdateUsersTask({ reviewFetcher }),
+    // new UpdateSimilarityTask(),
   ]);
 }
