@@ -20,6 +20,7 @@ export const users = pgTable(
     externalId: text("externalId").notNull(),
     mediaType: mediaTypeEnum("mediaType").notNull(),
     name: text("name").notNull(),
+    nextUpdateOn: timestamp("nextUpdateOn"),
   },
   (user) => [
     unique("user_external_mediaType").on(user.externalId, user.mediaType),
