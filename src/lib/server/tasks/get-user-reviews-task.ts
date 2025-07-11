@@ -3,6 +3,7 @@ import type ReviewFetcher from "../review-fetchers/review-fetcher";
 import GetUserReviewPageTask from "./get-user-review-page-task";
 import type Task from "./task";
 import TaskSequenceWithInitialize from "./task-sequence-with-initialize";
+import UpdateUserCacheTask from "./update-user-cache-task";
 
 export default class GetUserReviewsTask extends TaskSequenceWithInitialize {
   constructor({
@@ -37,15 +38,21 @@ export default class GetUserReviewsTask extends TaskSequenceWithInitialize {
     });
 
     let pagesToFetch = Array.from({ length: numPages }).map((_, i) => i + 1);
-    return pagesToFetch.map(
-      (page) =>
-        new GetUserReviewPageTask({
-          externalUserId: this._externalUserId,
-          userId: this._userId,
-          page,
-          reviewFetcher: this._reviewFetcher,
-        })
-    );
+
+    // IMPLEMENT III: update cache value
+
+    return [
+      ...pagesToFetch.map(
+        (page) =>
+          new GetUserReviewPageTask({
+            externalUserId: this._externalUserId,
+            userId: this._userId,
+            page,
+            reviewFetcher: this._reviewFetcher,
+          })
+      ),
+      new UpdateUserCacheTask({ id: this._userId }),
+    ];
   }
 
   protected get prefix(): string {

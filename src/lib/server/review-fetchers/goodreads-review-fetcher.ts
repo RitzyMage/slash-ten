@@ -51,7 +51,8 @@ export default class GoodreadsReviewFetcher implements ReviewFetcher {
 
   private async getUserReviewHTML(id: string, page: number) {
     let response = await this.callAPI(
-      `https://www.goodreads.com/review/list/${id}?page=${page}&shelf=read`
+      `https://www.goodreads.com/review/list/${id}?page=${page}&shelf=read`,
+      { loggedIn: true }
     );
     if (!response) {
       return null;
@@ -104,7 +105,7 @@ export default class GoodreadsReviewFetcher implements ReviewFetcher {
     try {
       return await axios.get(url, {
         headers: {
-          Cookie: loggedIn ? "cookie" : "",
+          Cookie: loggedIn ? process.env.GOODREADS_COOKIE : "",
         },
       });
     } catch (e) {

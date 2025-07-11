@@ -252,6 +252,10 @@ class Database {
     await db.update(media).set({ nextUpdateOn: date }).where(eq(media.id, id));
   }
 
+  async updateUserNextUpdate(id: number, date: Date) {
+    await db.update(users).set({ nextUpdateOn: date }).where(eq(users.id, id));
+  }
+
   async getValidReviews(
     userId: number,
     minCommon: number,
