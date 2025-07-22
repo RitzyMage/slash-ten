@@ -5,24 +5,33 @@
   import UpdateDetails from "./update-details.svelte";
 
   export let details: TaskDetails;
+  export let index: number | undefined = undefined;
 
   let collapsed = true;
 
   let toggleCollapsed = () => {
     collapsed = !collapsed;
   };
+
+  let shownSubtasks:
+    | ((TaskDetails & { index: number }) | { countSkipped: number })[]
+    | undefined =
+    "details" in details
+      ? details.details.slice(0, 10).map((_, i) => ({ ..._, index: i }))
+      : undefined;
 </script>
 
 <div class="updateDetails">
   <div class="header">
     <div class="message">
+      {index ? `${index}: ` : ""}
       {details.message}
       {#if "details" in details}
         <button onclick={toggleCollapsed} class="toggleButton">
           {#if collapsed}
-            <ChevronDown />
+            <ChevronDown size={20} />
           {:else}
-            <ChevronUp />
+            <ChevronUp size={20} />
           {/if}
         </button>
       {/if}
@@ -40,15 +49,21 @@
     </progress>
   </div>
 
-  {#if "details" in details && !collapsed}
-    <ol
-      class={[
-        "subdetails",
-        details.parallel ? "subdetails_parallel" : "subdetails_sequence",
-      ]}
-    >
-      {#each details.details as subtask}
-        <li class="detailsItem"><UpdateDetails details={subtask} /></li>
+  {#if shownSubtasks && !collapsed}
+    <ol class={["subdetails"]}>
+      {#each shownSubtasks as subtask}
+        {#if "countSkipped" in subtask}
+          ...
+        {:else}
+          <li class="detailsItem">
+            <UpdateDetails
+              details={subtask}
+              index={"parallel" in details && !details.parallel
+                ? subtask.index + 1
+                : undefined}
+            />
+          </li>
+        {/if}
       {/each}
     </ol>
   {/if}
@@ -69,9 +84,6 @@
     flex-direction: column;
     gap: var(--1);
     border-left: 1px solid var(--text);
-  }
-
-  .subdetails_parallel {
     list-style-type: none;
   }
 
