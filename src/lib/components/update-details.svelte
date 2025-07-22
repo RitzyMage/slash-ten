@@ -1,14 +1,31 @@
 <script lang="ts">
   import { Status, type TaskDetails } from "$lib/task-info";
+  import ChevronUp from "./icons/chevronUp.svelte";
+  import ChevronDown from "./icons/chevronDown.svelte";
   import UpdateDetails from "./update-details.svelte";
 
   export let details: TaskDetails;
+
+  let collapsed = true;
+
+  let toggleCollapsed = () => {
+    collapsed = !collapsed;
+  };
 </script>
 
 <div class="updateDetails">
   <div class="header">
     <div class="message">
       {details.message}
+      {#if "details" in details}
+        <button onclick={toggleCollapsed} class="toggleButton">
+          {#if collapsed}
+            <ChevronDown />
+          {:else}
+            <ChevronUp />
+          {/if}
+        </button>
+      {/if}
     </div>
     <progress
       max="1"
@@ -23,7 +40,7 @@
     </progress>
   </div>
 
-  {#if "details" in details}
+  {#if "details" in details && !collapsed}
     <ol
       class={[
         "subdetails",
@@ -60,6 +77,15 @@
 
   .message {
     padding: 0 var(--1);
+    width: calc(100% - var(--2));
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .toggleButton {
+    background-color: transparent;
+    border: none;
+    color: var(--text);
   }
 
   .progress {
