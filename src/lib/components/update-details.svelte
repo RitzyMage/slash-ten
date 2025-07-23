@@ -3,6 +3,7 @@
   import ChevronUp from "./icons/chevronUp.svelte";
   import ChevronDown from "./icons/chevronDown.svelte";
   import UpdateDetails from "./update-details.svelte";
+  import getSubArray from "$lib/util/sub-array";
 
   export let details: TaskDetails;
   export let index: number | undefined = undefined;
@@ -13,11 +14,14 @@
     collapsed = !collapsed;
   };
 
-  let shownSubtasks:
-    | ((TaskDetails & { index: number }) | { countSkipped: number })[]
-    | undefined =
+  let shownSubtasks =
     "details" in details
-      ? details.details.slice(0, 10).map((_, i) => ({ ..._, index: i }))
+      ? getSubArray(details.details, {
+          numStart: 10,
+          middleIndex: 100,
+          numMiddle: 10,
+          numEnd: 10,
+        })
       : undefined;
 </script>
 
