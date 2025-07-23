@@ -20,16 +20,53 @@ export default function getSubArray<T>(
     .map((_, i) => ({ ..._, index: i }));
 
   let middleSliceSize = Math.ceil(info.numMiddle / 2);
+  let middleStartIndex = info.middleIndex - middleSliceSize;
+  let middleEndIndex = 0;
   let middleSlice: Indexed<T>[] = array
-    .slice(
-      info.middleIndex - middleSliceSize,
-      info.middleIndex + middleSliceSize
-    )
-    .map((_, i) => ({ ..._, index: i + info.middleIndex - middleSliceSize }));
+    .slice(middleStartIndex, middleEndIndex)
+    .map((_, i) => ({ ..._, index: i + middleStartIndex }));
 
+  let middleSkip: undefined | SubArraySkip;
+  let numSkippedMiddle = middleStartIndex - info.numStart;
+  if (numSkippedMiddle <= 0) {
+    middleSlice = [];
+    startSlice = array
+      .slice(0, middleEndIndex)
+      .map((_, i) => ({ ..._, index: i }));
+  } else {
+    middleSkip = { numSkipped: numSkippedMiddle };
+  }
+
+  let endStart = array.length - 1 - info.numEnd;
   let endSlice: Indexed<T>[] = array
-    .slice(-info.numEnd - 1, -1)
-    .map((_, i) => ({ ..._, index: i + array.length - 1 - info.numEnd }));
+    .slice(endStart, -1)
+    .map((_, i) => ({ ..._, index: i + endStart }));
 
-  return [...startSlice, ...middleSlice, ...endSlice];
+  let endSkip: undefined | SubArraySkip;
+  let numSkippedEnd = endStart - middleEndIndex;
+  if (numSkippedEnd <= 0) {
+    middleSlice = [];
+    endSlice = array
+      .slice(middleStartIndex, -1)
+      .map((_, i) => ({ ..._, index: i + middleStartIndex }));
+  } else {
+    endSkip = { numSkipped: numSkippedEnd };
+  }
+
+  let result: (Indexed<T> | SubArraySkip)[] = [];
+  result = result.concat(startSlice);
+
+  if (middleSkip) {
+    result.push(middleSkip);
+  }
+
+  result = result.concat(middleSlice);
+
+  if (endSkip) {
+    result.push(endSkip);
+  }
+
+  result = result.concat(endSlice);
+
+  return result;
 }

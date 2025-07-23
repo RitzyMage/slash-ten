@@ -56,7 +56,7 @@
   {#if shownSubtasks && !collapsed}
     <ol class={["subdetails"]}>
       {#each shownSubtasks as subtask}
-        {#if "countSkipped" in subtask}
+        {#if "numSkipped" in subtask}
           ...
         {:else}
           <li class="detailsItem">
