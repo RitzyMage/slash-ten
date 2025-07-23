@@ -18,8 +18,6 @@
     "details" in details
       ? getSubArray(details.details, {
           numStart: 10,
-          middleIndex: 100,
-          numMiddle: 10,
           numEnd: 10,
         })
       : undefined;
@@ -57,7 +55,7 @@
     <ol class={["subdetails"]}>
       {#each shownSubtasks as subtask}
         {#if "numSkipped" in subtask}
-          ...
+          ... {subtask.numSkipped} skipped
         {:else}
           <li class="detailsItem">
             <UpdateDetails
