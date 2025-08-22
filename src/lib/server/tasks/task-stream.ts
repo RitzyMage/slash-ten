@@ -31,6 +31,7 @@ export default class TaskStream implements TaskObserver {
   }
 
   notify(info: TaskDetails): void {
+    console.log("notifying", info);
     this.sendMessage(info);
     if (isComplete(info)) {
       this._controller?.close();

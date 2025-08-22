@@ -14,7 +14,7 @@ interface SubArrayInfoMiddle {
 
 export type SubArrayInfo = SubArrayInfoStartEnd | SubArrayInfoMiddle;
 
-type Indexed<T> = T & { index: number };
+export type Indexed<T> = T & { index: number };
 
 function GetStartAndEnd<T>(array: T[], info: SubArrayInfoStartEnd) {
   let startSlice: Indexed<T>[] = array

@@ -3,24 +3,27 @@
   import ChevronUp from "./icons/chevronUp.svelte";
   import ChevronDown from "./icons/chevronDown.svelte";
   import UpdateDetails from "./update-details.svelte";
-  import getSubArray from "$lib/util/sub-array";
+  import getSubArray, {
+    type Indexed,
+    type SubArraySkip,
+  } from "$lib/util/sub-array";
 
   export let details: TaskDetails;
   export let index: number | undefined = undefined;
 
   let collapsed = true;
+  let shownSubtasks: (SubArraySkip | Indexed<TaskDetails>)[] | undefined =
+    undefined;
 
   let toggleCollapsed = () => {
     collapsed = !collapsed;
+    if ("details" in details && !shownSubtasks && !collapsed) {
+      shownSubtasks = getSubArray(details.details, {
+        numStart: 10,
+        numEnd: 10,
+      });
+    }
   };
-
-  let shownSubtasks =
-    "details" in details
-      ? getSubArray(details.details, {
-          numStart: 10,
-          numEnd: 10,
-        })
-      : undefined;
 </script>
 
 <div class="updateDetails">
