@@ -1,16 +1,12 @@
 <script lang="ts">
   import { Status, type TaskDetails } from "$lib/task-info";
+  import IndentedString from "./indented-string.svelte";
 
   export let details: TaskDetails;
-  export let index: number | undefined = undefined;
 </script>
 
 <div class="updateDetails">
   <div class="header">
-    <div class="message">
-      {index ? `${index}: ` : ""}
-      {details.message}
-    </div>
     <progress
       max="1"
       value={details.completion}
@@ -22,6 +18,9 @@
     >
       {details.completion}
     </progress>
+    <div class="message">
+      <IndentedString contents={details.message} />
+    </div>
   </div>
 </div>
 
@@ -36,19 +35,12 @@
 
   .message {
     padding: 0 var(--1);
-    width: calc(100% - var(--2));
-    display: flex;
-    justify-content: space-between;
   }
 
   .progress {
-    width: 100%;
-    top: 0;
-    bottom: 0;
     border: none;
     background-color: var(--bg);
     border-radius: var(--rounded);
-    position: absolute;
     z-index: -1;
   }
 
