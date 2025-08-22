@@ -42,6 +42,7 @@
     background-color: var(--bg);
     border-radius: var(--rounded);
     z-index: -1;
+    width: 100%;
   }
 
   .progress::-webkit-progress-bar {
