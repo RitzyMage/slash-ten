@@ -46,7 +46,6 @@
   {#if updateStatus === "loading"}
     loadin'
   {:else if !updateStatus}
-    <a href="/update/history">View History</a>
     <p>no updates running right now</p>
     <Button onclick={update} disabled={!!updateStatus}>Update</Button>
   {:else}

@@ -33,6 +33,7 @@ abstract class Task {
 
   protected updateStatus(newDetails: TaskDetails) {
     this._currentInfo = newDetails;
+    console.log("task update:", this._currentInfo);
     this.notifyObservers();
   }
 

@@ -17,8 +17,6 @@ export default class TaskSequence extends Task implements TaskObserver {
       status: Status.STARTED,
       message: this.Prefix("Sequence queued"),
       completion: 0,
-      details: this.GetStatuses(),
-      parallel: false,
     });
   }
 
@@ -53,11 +51,15 @@ export default class TaskSequence extends Task implements TaskObserver {
       status = Status.SUCCESSFUL;
     }
 
+    let currentlyRunningIndex = subtaskInfo.findIndex(
+      (_) => _.status === Status.IN_PROGRESS
+    );
+
     let message = this.Prefix(
       status === Status.IN_PROGRESS
-        ? `running task ${
-            subtaskInfo.findIndex((_) => _.status === Status.IN_PROGRESS) + 1
-          } / ${subtaskInfo.length}`
+        ? `running task ${currentlyRunningIndex + 1} / ${subtaskInfo.length}: ${
+            subtaskInfo[currentlyRunningIndex]?.message ?? "initializing..."
+          }`
         : `Finished ${subtaskInfo.length} subtasks`
     );
 
@@ -69,8 +71,6 @@ export default class TaskSequence extends Task implements TaskObserver {
       status,
       message,
       completion,
-      details: subtaskInfo,
-      parallel: false,
     });
   }
 

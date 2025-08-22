@@ -12,8 +12,6 @@ export default class ParallelTasks extends Task implements TaskObserver {
       status: Status.STARTED,
       message: "Parallel tasks queued",
       completion: 0,
-      details: this.GetStatuses(),
-      parallel: true,
     });
   }
 
@@ -41,7 +39,7 @@ export default class ParallelTasks extends Task implements TaskObserver {
       status = Status.SUCCESSFUL;
     }
 
-    let message = `running tasks in parallel`;
+    let message = `running ${subtaskInfo.length} tasks in parallel`;
 
     let completion =
       subtaskInfo.reduce((total, _) => total + _.completion, 0) /
@@ -51,8 +49,6 @@ export default class ParallelTasks extends Task implements TaskObserver {
       status,
       message,
       completion,
-      details: subtaskInfo,
-      parallel: true,
     });
   }
 

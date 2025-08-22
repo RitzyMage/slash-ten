@@ -5,18 +5,11 @@ export enum Status {
   FAILED,
 }
 
-interface BasicTaskDetails {
+export interface TaskDetails {
   status: Status;
   message: string;
   completion: number;
 }
-
-interface ParentTaskDetails extends BasicTaskDetails {
-  details: TaskDetails[];
-  parallel: boolean;
-}
-
-export type TaskDetails = ParentTaskDetails | BasicTaskDetails;
 
 export function isComplete(info: TaskDetails) {
   return [Status.SUCCESSFUL, Status.FAILED].includes(info.status);
