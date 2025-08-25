@@ -5,8 +5,7 @@ import GetUserReviewsTask from "./get-user-reviews-task";
 import Task from "./task";
 import TaskSequenceWithInitialize from "./task-sequence-with-initialize";
 
-const CHUNKS = 10;
-const TIME = 200;
+const LIMIT = 50;
 
 export default class UpdateUsersTask extends TaskSequenceWithInitialize {
   constructor({ reviewFetcher }: { reviewFetcher: ReviewFetcher }) {
@@ -21,7 +20,7 @@ export default class UpdateUsersTask extends TaskSequenceWithInitialize {
       completion: 0,
     });
 
-    let staleUsers = await this._database.getStaleUsers();
+    let staleUsers = await this._database.getStaleUsers(LIMIT);
 
     this.updateStatus({
       status: Status.IN_PROGRESS,

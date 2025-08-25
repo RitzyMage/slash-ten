@@ -237,16 +237,17 @@ class Database {
       .innerJoin(externalLinks, eq(media.id, externalLinks.mediaId))
       .limit(limit)
       .orderBy(asc(media.nextUpdateOn))
-
       .groupBy(media.id)) as { id: number; link: string; next: unknown }[];
 
     return stale;
   }
 
-  async getStaleUsers() {
+  async getStaleUsers(limit: number) {
     return await db
       .select()
       .from(users)
+      .limit(limit)
+      .orderBy(asc(users.nextUpdateOn))
       .where(
         or(isNull(users.nextUpdateOn), lt(users.nextUpdateOn, new Date()))
       );
