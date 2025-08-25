@@ -1,5 +1,5 @@
 import { keyBy } from "$lib/util";
-import { eq, inArray, and, sql, or, isNull, lt, min } from "drizzle-orm";
+import { eq, inArray, and, sql, or, isNull, lt, min, asc } from "drizzle-orm";
 import { bookMetadata, externalLinks, media, reviews, users } from "./schema";
 import { db } from "./index";
 import type {
@@ -225,18 +225,31 @@ class Database {
     }
   }
 
-  async getStaleMedia(type: MediaType) {
-    return (await db
+  async getStaleMedia(type: MediaType, limit: number) {
+    const notUpdated = (await db
       .select({ id: media.id, link: min(externalLinks.link) })
       .from(media)
-      .where(
-        and(
-          eq(media.mediaType, type),
-          or(isNull(media.nextUpdateOn), lt(media.nextUpdateOn, new Date()))
-        )
-      )
+      .where(and(eq(media.mediaType, type), isNull(media.nextUpdateOn)))
       .innerJoin(externalLinks, eq(media.id, externalLinks.mediaId))
+      .limit(limit)
       .groupBy(media.id)) as { id: number; link: string }[];
+
+    let stale: { id: number; link: string }[] = [];
+
+    if (notUpdated.length < limit) {
+      stale = (await db
+        .select({ id: media.id, link: min(externalLinks.link) })
+        .from(media)
+        .where(
+          and(eq(media.mediaType, type), or(lt(media.nextUpdateOn, new Date())))
+        )
+        .innerJoin(externalLinks, eq(media.id, externalLinks.mediaId))
+        .limit(limit /*- notUpdated.length*/)
+        .orderBy(asc(media.nextUpdateOn))
+        .groupBy(media.id)) as { id: number; link: string }[];
+    }
+
+    return [...notUpdated, ...stale];
   }
 
   async getStaleUsers() {

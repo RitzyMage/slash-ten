@@ -1,12 +1,10 @@
-import { Status } from "$lib/task-info";
 import Database from "../db/database";
 import type ReviewFetcher from "../review-fetchers/review-fetcher";
 import GetMediaReviewersTask from "./get-media-reviewers-task";
 import Task from "./task";
 import TaskSequenceWithInitialize from "./task-sequence-with-initialize";
 
-const CHUNKS = 10;
-const TIME = 200;
+const LIMIT = 100;
 
 export default class UpdateBooksTask extends TaskSequenceWithInitialize {
   constructor({ reviewFetcher }: { reviewFetcher: ReviewFetcher }) {
@@ -16,7 +14,8 @@ export default class UpdateBooksTask extends TaskSequenceWithInitialize {
 
   protected async GetSequence(): Promise<Task[]> {
     let staleMedia = await this._database.getStaleMedia(
-      this._reviewFetcher.mediaType
+      this._reviewFetcher.mediaType,
+      LIMIT
     );
     return staleMedia.map(
       (media) =>
