@@ -226,30 +226,21 @@ class Database {
   }
 
   async getStaleMedia(type: MediaType, limit: number) {
-    const notUpdated = (await db
-      .select({ id: media.id, link: min(externalLinks.link) })
+    const stale = (await db
+      .select({
+        id: media.id,
+        link: min(externalLinks.link),
+        next: media.nextUpdateOn,
+      })
       .from(media)
       .where(and(eq(media.mediaType, type), isNull(media.nextUpdateOn)))
       .innerJoin(externalLinks, eq(media.id, externalLinks.mediaId))
       .limit(limit)
-      .groupBy(media.id)) as { id: number; link: string }[];
+      .orderBy(asc(media.nextUpdateOn))
 
-    let stale: { id: number; link: string }[] = [];
+      .groupBy(media.id)) as { id: number; link: string; next: unknown }[];
 
-    if (notUpdated.length < limit) {
-      stale = (await db
-        .select({ id: media.id, link: min(externalLinks.link) })
-        .from(media)
-        .where(
-          and(eq(media.mediaType, type), or(lt(media.nextUpdateOn, new Date())))
-        )
-        .innerJoin(externalLinks, eq(media.id, externalLinks.mediaId))
-        .limit(limit /*- notUpdated.length*/)
-        .orderBy(asc(media.nextUpdateOn))
-        .groupBy(media.id)) as { id: number; link: string }[];
-    }
-
-    return [...notUpdated, ...stale];
+    return stale;
   }
 
   async getStaleUsers() {
