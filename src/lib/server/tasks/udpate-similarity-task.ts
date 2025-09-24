@@ -7,8 +7,8 @@ export default class UpdateSimilarityTask extends TaskSequence {
   constructor() {
     super([
       new UpdateUsersSimilarityTask(),
-      new UpdateUserBookSimilarityTask(),
-      new UpdateBooksSimilarityTask(),
+      // new UpdateUserBookSimilarityTask(),
+      // new UpdateBooksSimilarityTask(),
     ]);
   }
 }

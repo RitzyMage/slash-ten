@@ -9,6 +9,8 @@ import {
   primaryKey,
   json,
   timestamp,
+  boolean,
+  decimal,
 } from "drizzle-orm/pg-core";
 
 export const mediaTypeEnum = pgEnum("MEDIA_TYPE", ["GAME", "MOVIE", "BOOK"]);
@@ -85,6 +87,7 @@ export const media = pgTable(
     name: text("name").notNull(),
     mediaType: mediaTypeEnum("mediaType").notNull(),
     nextUpdateOn: timestamp("nextUpdateOn"),
+    needsSimilarityUpdate: boolean("needsSimilarityUpdate").default(true),
   },
   (media) => [
     unique("media_external_mediaType").on(media.externalId, media.mediaType),
@@ -137,3 +140,27 @@ export const updateHistory = pgTable("UpdateHistory", {
   updateData: json("updateData").notNull(),
   ran: timestamp("updated").notNull(),
 });
+
+export const userClientSimilarity = pgTable(
+  "UserClientSimilarity",
+  {
+    userId: integer("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+
+    clientId: integer("clientId")
+      .notNull()
+      .references(() => clients.id, { onDelete: "cascade" }),
+
+    similarity: decimal("similarity").notNull(),
+  },
+  (similarity) => [
+    primaryKey(similarity.userId, similarity.clientId),
+    index("user_similarity_user_idx").on(similarity.userId),
+    index("user_similarity_media_idx").on(similarity.clientId),
+    index("user_similarity_user_media_idx").on(
+      similarity.userId,
+      similarity.clientId
+    ),
+  ]
+);

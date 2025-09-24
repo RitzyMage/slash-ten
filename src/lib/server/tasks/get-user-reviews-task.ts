@@ -39,8 +39,6 @@ export default class GetUserReviewsTask extends TaskSequenceWithInitialize {
 
     let pagesToFetch = Array.from({ length: numPages }).map((_, i) => i + 1);
 
-    // IMPLEMENT III: update cache value
-
     return [
       ...pagesToFetch.map(
         (page) =>
