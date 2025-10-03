@@ -144,7 +144,6 @@ export default class UpdateUsersSimilarityTask extends Task {
             )
           );
         if (inDb.length) {
-          console.log("update");
           await db
             .update(userClientSimilarity)
             .set({ similarity: similarityEntry.similarity })
@@ -155,8 +154,6 @@ export default class UpdateUsersSimilarityTask extends Task {
               )
             );
         } else {
-          console.log("insert");
-
           await db.insert(userClientSimilarity).values(similarityEntry);
         }
       }

@@ -10,7 +10,7 @@ import {
   json,
   timestamp,
   boolean,
-  decimal,
+  doublePrecision,
 } from "drizzle-orm/pg-core";
 
 export const mediaTypeEnum = pgEnum("MEDIA_TYPE", ["GAME", "MOVIE", "BOOK"]);
@@ -152,7 +152,7 @@ export const userClientSimilarity = pgTable(
       .notNull()
       .references(() => clients.id, { onDelete: "cascade" }),
 
-    similarity: decimal("similarity").notNull(),
+    similarity: doublePrecision("similarity").notNull(),
   },
   (similarity) => [
     primaryKey(similarity.userId, similarity.clientId),
