@@ -112,12 +112,16 @@ function getUserSimilarity(clientUser: Review[], otherUser: Review[]) {
 
 export default class UpdateUsersSimilarityTask extends Task {
   protected async _Run(): Promise<void> {
-    // IMPLEMENT IV: fetch users that need similarity updated, update similarity
-
     let allClientsWithUsers = await db
       .select()
       .from(clients)
       .innerJoin(users, eq(users.id, clients.userId));
+
+    this.updateStatus({
+      status: Status.IN_PROGRESS,
+      message: `finished getting reviews`,
+      completion: 0.1,
+    });
 
     for (let { Client, User } of allClientsWithUsers) {
       let validReviews = await getValidReviews(
@@ -133,6 +137,13 @@ export default class UpdateUsersSimilarityTask extends Task {
         clientId: Client.id,
       }));
 
+      this.updateStatus({
+        status: Status.IN_PROGRESS,
+        message: `finished calculating similarity`,
+        completion: 0.2,
+      });
+
+      let numDone = 0;
       for (let similarityEntry of similarities) {
         let inDb = await db
           .select()
@@ -156,6 +167,14 @@ export default class UpdateUsersSimilarityTask extends Task {
         } else {
           await db.insert(userClientSimilarity).values(similarityEntry);
         }
+        ++numDone;
+        let percentDoneWithDb = numDone / similarities.length;
+        let percentDoneOverall = percentDoneWithDb * 0.8 + 0.2;
+        this.updateStatus({
+          status: Status.IN_PROGRESS,
+          message: `updated user ${similarityEntry.userId} (${numDone}/${similarities.length})`,
+          completion: percentDoneOverall,
+        });
       }
     }
 
