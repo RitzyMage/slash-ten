@@ -161,9 +161,9 @@ export const userClientSimilarity = pgTable(
 export const userPredictedScores = pgTable(
 	'UserPredictedScores',
 	{
-		userId: integer('userId')
+		clientId: integer('clientId')
 			.notNull()
-			.references(() => users.id, { onDelete: 'cascade' }),
+			.references(() => clients.id, { onDelete: 'cascade' }),
 
 		mediaId: integer('mediaId')
 			.notNull()
@@ -172,9 +172,9 @@ export const userPredictedScores = pgTable(
 		score: doublePrecision('score').notNull(),
 	},
 	(similarity) => [
-		primaryKey(similarity.userId, similarity.mediaId),
-		index('user_predicted_Score_user_idx').on(similarity.userId),
+		primaryKey(similarity.clientId, similarity.mediaId),
+		index('user_predicted_Score_user_idx').on(similarity.clientId),
 		index('user_predicted_Score_media_idx').on(similarity.mediaId),
-		index('user_predicted_Score_user_media_idx').on(similarity.userId, similarity.mediaId),
+		index('user_predicted_Score_user_media_idx').on(similarity.clientId, similarity.mediaId),
 	],
 );
