@@ -7,11 +7,11 @@ import type { Review } from '../db/types';
 
 const MIN_COMMON_REVIEWS = 20;
 
+async function getCommonUsers(clientId: number) {
+	return db.select().from(userClientSimilarity).where(eq(userClientSimilarity.clientId, clientId));
+}
+
 async function getValidMedia(clientId: number, minCommonReviews: number): Promise<Review[]> {
-	// let similarUsers = await db
-	// 	.select()
-	// 	.from(userClientSimilarity)
-	// 	.where(eq(userClientSimilarity.clientId, clientId));
 	return await db.execute(sql`
       WITH ValidMedia AS (
           SELECT r."mediaId"
@@ -45,7 +45,19 @@ export default class UpdateUserBookSimilarityTask extends Task {
 			let i = parseInt(_i);
 			let { Client, User } = allClientsWithUsers[i];
 			let validMedia = await getValidMedia(Client.id, MIN_COMMON_REVIEWS);
-			console.log('for client', Client.name, 'valid media is', validMedia.length);
+			let commonUsers = await getCommonUsers(Client.id);
+			console.log(
+				'for client',
+				Client.name,
+				'valid media is',
+				validMedia.length,
+				'e.g.',
+				validMedia[0],
+				'users',
+				commonUsers.length,
+				'e.g.',
+				commonUsers[0],
+			);
 
 			this.updateStatus({
 				status: Status.IN_PROGRESS,
