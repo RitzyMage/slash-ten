@@ -24,7 +24,6 @@ export default class GetMediaReviewersTask extends Task {
   }
 
   protected async _Run(): Promise<void> {
-    // IMPLEMENT II: get user reviews for book
     this.updateStatus({
       status: Status.IN_PROGRESS,
       message: `Get Reviewers for Book ${this._mediaId} started`,

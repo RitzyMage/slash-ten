@@ -6,8 +6,8 @@ import UpdateBooksSimilarityTask from "./update-book-similarity-task";
 export default class UpdateSimilarityTask extends TaskSequence {
   constructor() {
     super([
-      new UpdateUsersSimilarityTask(),
-      // new UpdateUserBookSimilarityTask(),
+      // new UpdateUsersSimilarityTask(),
+      new UpdateUserBookSimilarityTask(),
       // new UpdateBooksSimilarityTask(),
     ]);
   }
