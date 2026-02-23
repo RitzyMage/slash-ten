@@ -1,4 +1,3 @@
-import { sql } from 'drizzle-orm';
 import {
 	pgTable,
 	serial,
@@ -12,7 +11,6 @@ import {
 	timestamp,
 	boolean,
 	doublePrecision,
-	check,
 } from 'drizzle-orm/pg-core';
 
 export const mediaTypeEnum = pgEnum('MEDIA_TYPE', ['GAME', 'MOVIE', 'BOOK']);
@@ -136,6 +134,7 @@ export const externalLinks = pgTable('ExternalLink', {
 export const updateHistory = pgTable('UpdateHistory', {
 	id: serial('id').primaryKey(),
 	updateData: json('updateData').notNull(),
+	success: boolean().notNull(),
 	ran: timestamp('updated').notNull(),
 });
 
@@ -178,28 +177,5 @@ export const userPredictedScores = pgTable(
 		index('user_predicted_Score_user_idx').on(similarity.clientId),
 		index('user_predicted_Score_media_idx').on(similarity.mediaId),
 		index('user_predicted_Score_user_media_idx').on(similarity.clientId, similarity.mediaId),
-	],
-);
-
-export const mediaSimilarity = pgTable(
-	'MediaSimilarity',
-	{
-		media1Id: integer('media1Id')
-			.notNull()
-			.references(() => media.id, { onDelete: 'cascade' }),
-
-		media2Id: integer('media2Id')
-			.notNull()
-			.references(() => media.id, { onDelete: 'cascade' }),
-
-		correlation: doublePrecision('correlation').notNull(),
-		reviewsInCommon: integer('reviewsInCommon').notNull(),
-	},
-	(similarity) => [
-		primaryKey(similarity.media1Id, similarity.media2Id),
-		check('mediaSimilarityUnique', sql`${similarity.media1Id} < ${similarity.media2Id}`),
-		index('media_similarity_user_idx').on(similarity.media1Id),
-		index('media_similarity_media_idx').on(similarity.media2Id),
-		index('media_similarity_user_media_idx').on(similarity.media1Id, similarity.media2Id),
 	],
 );
