@@ -1,5 +1,5 @@
 import { Status } from "$lib/task-info";
-import { randomDateInRange, TWO_YEARS } from "../date-utils/date-ranges";
+import randomDateInRange, {  TWO_YEARS } from "../../util/random-date-in-range";
 import { UpdateUserDate } from "../db/users/update-user-date";
 import Task from "./task";
 

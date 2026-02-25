@@ -1,8 +1,9 @@
 import axios from "axios";
 import type ReviewFetcher from "./review-fetcher";
 import { HTMLElement, parse } from "node-html-parser";
-import type { CreateMedia, CreateReview } from "../db/database";
 import type { BookMetadata } from "../db/types";
+import type { CreateReview } from "../db/reviews/create-review";
+import type { CreateMedia } from "../db/media/create-media";
 
 type User = {
   id: string;

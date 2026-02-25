@@ -2,12 +2,8 @@ import { keyBy } from "$lib/util";
 import { db } from "..";
 
 import { reviews } from "../schema";
-import type { Media, Review } from "../types";
-
-export type CreateReview = Pick<Review, "score"> & {
-  mediaExternalId: string;
-};
-
+import type { Media } from "../types";
+import type { CreateReview } from "./create-review";
 
   export default async function AddReviews(userId: number, toCreate: CreateReview[], media: Media[]) {
     let mediaByExternalId = keyBy(media, "externalId");

@@ -11,7 +11,7 @@ type DATE_RANGE =
   | typeof FIVE_YEARS
   | typeof TWO_YEARS;
 
-export function randomDateInRange(range: DATE_RANGE) {
+export default function randomDateInRange(range: DATE_RANGE) {
   let randomOffset = Math.round(Math.random() * range);
   return new Date(Date.now() + randomOffset);
 }

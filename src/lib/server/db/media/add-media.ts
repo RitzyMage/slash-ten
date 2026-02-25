@@ -3,10 +3,7 @@ import { db } from "..";
 import { bookMetadata, externalLinks, media } from "../schema";
 import type { BookMetadata, Media } from "../types";
 import { keyBy } from "$lib/util";
-export type CreateMedia = Pick<Media, "externalId" | "name" | "mediaType"> & {
-  metadata: Pick<BookMetadata, "author" | "series" | "seriesOrder">;
-  externalLinks: string[];
-};
+import type { CreateMedia } from "./create-media";
 
 async function getExistingMedia(
   input: Pick<Media, "externalId" | "mediaType">,

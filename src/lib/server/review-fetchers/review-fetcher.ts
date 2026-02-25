@@ -1,7 +1,8 @@
-import type { CreateMedia, CreateReview } from "../db/database";
+import type { CreateMedia } from "../db/media/create-media";
+import type { CreateReview } from "../db/reviews/create-review";
 import type { MediaType } from "../db/types";
 
-interface UserReviewsResult {
+export interface UserReviewsResult {
   reviews: CreateReview[];
   media: CreateMedia[];
 }

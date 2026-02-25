@@ -1,5 +1,5 @@
 import { Status } from "$lib/task-info";
-import { FIVE_YEARS, randomDateInRange } from "../date-utils/date-ranges";
+import randomDateInRange, { FIVE_YEARS } from "../../util/random-date-in-range";
 import addUsers from "../db/users/add-users";
 import type ReviewFetcher from "../review-fetchers/review-fetcher";
 import Task from "./task";
