@@ -1,11 +1,8 @@
 import { Status } from "$lib/task-info";
-import AddMedia from "../db/media/add-media";
-import AddReviews from "../db/reviews/add-reviews";
-import type ReviewFetcher from "../review-fetchers/review-fetcher";
-import Task from "./task";
-
-const TEST_TIME = 200;
-const CHUNKS = 10;
+import AddMedia from "../../db/media/add-media";
+import AddReviews from "../../db/reviews/add-reviews";
+import type ReviewFetcher from "../../review-fetchers/review-fetcher";
+import Task from "../task";
 
 export default class GetUserReviewPageTask extends Task {
   constructor({

@@ -1,5 +1,5 @@
 import TaskStream from "$lib/server/tasks/task-stream";
-import GetUpdateTask from "$lib/server/tasks/update-task";
+import GetUpdateTask from "$lib/server/tasks/update/update-task";
 import UpdateRunner from "$lib/server/update-runner";
 
 let runner = new UpdateRunner();

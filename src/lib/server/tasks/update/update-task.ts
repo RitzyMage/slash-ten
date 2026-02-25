@@ -1,9 +1,9 @@
 import UpdateUsersTask from './update-users-task';
-import TaskSequence from './task-sequence';
+import TaskSequence from '../task-sequence';
 import UpdateBooksTask from './update-books-task';
 import UpdateClientsTask from './update-clients-task';
 import UpdateSimilarityTask from './update-similarity-task';
-import GoodreadsReviewFetcher from '../review-fetchers/goodreads-review-fetcher';
+import GoodreadsReviewFetcher from '../../review-fetchers/goodreads-review-fetcher';
 
 export default async function GetUpdateTask() {
 	let reviewFetcher = new GoodreadsReviewFetcher();

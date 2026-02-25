@@ -1,4 +1,4 @@
-import TaskSequence from './task-sequence';
+import TaskSequence from '../task-sequence';
 import UpdateUserBookSimilarityTask from './update-user-book-similarity-task';
 import UpdateUsersSimilarityTask from './update-users-similarity-task';
 

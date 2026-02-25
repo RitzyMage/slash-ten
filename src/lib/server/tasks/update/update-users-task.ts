@@ -1,9 +1,9 @@
 import { Status } from "$lib/task-info";
-import GetStaleUsers from "../db/users/get-stale-users";
-import type ReviewFetcher from "../review-fetchers/review-fetcher";
+import GetStaleUsers from "../../db/users/get-stale-users";
+import type ReviewFetcher from "../../review-fetchers/review-fetcher";
 import GetUserReviewsTask from "./get-user-reviews-task";
-import Task from "./task";
-import TaskSequenceWithInitialize from "./task-sequence-with-initialize";
+import Task from "../task";
+import TaskSequenceWithInitialize from "../task-sequence-with-initialize";
 
 const LIMIT = 50;
 

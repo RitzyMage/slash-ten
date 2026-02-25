@@ -1,8 +1,8 @@
 import { Status } from "$lib/task-info";
-import type ReviewFetcher from "../review-fetchers/review-fetcher";
+import type ReviewFetcher from "../../review-fetchers/review-fetcher";
 import GetUserReviewPageTask from "./get-user-review-page-task";
-import type Task from "./task";
-import TaskSequenceWithInitialize from "./task-sequence-with-initialize";
+import type Task from "../task";
+import TaskSequenceWithInitialize from "../task-sequence-with-initialize";
 import UpdateUserCacheTask from "./update-user-cache-task";
 
 export default class GetUserReviewsTask extends TaskSequenceWithInitialize {

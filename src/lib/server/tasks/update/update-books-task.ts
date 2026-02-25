@@ -1,8 +1,8 @@
-import GetStaleMedia from "../db/media/get-stale-media";
-import type ReviewFetcher from "../review-fetchers/review-fetcher";
+import GetStaleMedia from "../../db/media/get-stale-media";
+import type ReviewFetcher from "../../review-fetchers/review-fetcher";
 import GetMediaReviewersTask from "./get-media-reviewers-task";
-import Task from "./task";
-import TaskSequenceWithInitialize from "./task-sequence-with-initialize";
+import Task from "../task";
+import TaskSequenceWithInitialize from "../task-sequence-with-initialize";
 
 const LIMIT = 100;
 
