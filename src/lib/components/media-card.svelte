@@ -1,9 +1,9 @@
 <script lang="ts">
-  import type { Recommendation } from "$lib/data-types/recommendation";
+  // import type ScoreWithMedia from "$lib/types/score-with-media";
 
   let seriesRegex = / \(.+ #\d+(,\s*Part\s*\d+\s*of\s*\d+)?\)/g;
 
-  export let recommendation: Recommendation;
+  export let recommendation: any;
 
   const parseName = (name: string) => {
     let [book, author] = name.split(" by ");
@@ -18,12 +18,12 @@
     return { book, author, seriesInfo, seriesName, seriesNumber };
   };
   let { book, author, seriesInfo, seriesName, seriesNumber } = parseName(
-    recommendation.name
+    recommendation.Media.name,
   );
 </script>
 
 <div class="recommendation">
-  <div class="recommendation-id">{recommendation.id}</div>
+  <div class="recommendation-id">{recommendation.Media.id}</div>
   <div class="recommendation-title">{book}</div>
   <div class="recommendation-author">{author}</div>
   {#if seriesInfo}
@@ -33,10 +33,7 @@
     </div>
   {/if}
   <div class="recommendation-score">
-    {(recommendation.score * 100).toFixed(2)}%
-  </div>
-  <div class="recommendation-numReviews">
-    {recommendation.numberReviews} reviews
+    {(recommendation.UserPredictedScores.score * 100).toFixed(2)}%
   </div>
 </div>
 
@@ -61,10 +58,6 @@
   }
 
   .recommendation-score {
-    color: #ddd;
-  }
-
-  .recommendation-numReviews {
     color: #ddd;
   }
 
