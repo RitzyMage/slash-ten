@@ -1,10 +1,12 @@
-import { Status } from "$lib/task-info";
+import { Status } from "$lib/types/task-info";
 import { and, eq, sql } from "drizzle-orm";
 import { db } from "../../db";
 import { clients, userClientSimilarity, users } from "../../db/schema";
 import Task from "../task";
 import type { Review } from "../../db/types";
-import { groupBy, keyBy } from "$lib/util";
+import keyBy from "$lib/util/key-by";
+import groupBy from "$lib/util/group-by";
+
 
 const MIN_COMMON_REVIEWS = 10;
 const MIN_REVIEW_COUNT = 10;

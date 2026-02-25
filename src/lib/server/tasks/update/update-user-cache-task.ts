@@ -1,6 +1,6 @@
-import { Status } from "$lib/task-info";
-import randomDateInRange, {  TWO_YEARS } from "../../../util/random-date-in-range";
-import { UpdateUserDate } from "../../db/users/update-user-date";
+import { Status } from "$lib/types/task-info";
+import randomDateInRange, {  TWO_YEARS } from "$lib/util/random-date-in-range";
+import { UpdateUserDate } from "$lib/server/db/users/update-user-date";
 import Task from "../task";
 
 export default class UpdateUserCacheTask extends Task {

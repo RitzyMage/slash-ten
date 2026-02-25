@@ -1,4 +1,4 @@
-import { Status } from "$lib/task-info";
+import { Status } from "$lib/types/task-info";
 import AddMedia from "../../db/media/add-media";
 import AddReviews from "../../db/reviews/add-reviews";
 import type ReviewFetcher from "../../review-fetchers/review-fetcher";

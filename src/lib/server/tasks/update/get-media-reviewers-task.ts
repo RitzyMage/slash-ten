@@ -1,9 +1,9 @@
-import { Status } from "$lib/task-info";
-import randomDateInRange, { FIVE_YEARS } from "../../../util/random-date-in-range";
-import addUsers from "../../db/users/add-users";
-import type ReviewFetcher from "../../review-fetchers/review-fetcher";
+import { Status } from "$lib/types/task-info";
+import randomDateInRange, { FIVE_YEARS } from "$lib/util/random-date-in-range";
+import addUsers from "$lib/server/db/users/add-users";
+import type ReviewFetcher from "$lib/server/review-fetchers/review-fetcher";
 import Task from "../task";
-import UpdateMediaDate from "../../db/media/update-media-date";
+import UpdateMediaDate from "$lib/server/db/media/update-media-date";
 
 export default class GetMediaReviewersTask extends Task {
   constructor({

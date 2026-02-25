@@ -1,4 +1,5 @@
-import { keyBy } from "$lib/util";
+
+import keyBy from "$lib/util/key-by";
 import { db } from "..";
 
 import { reviews } from "../schema";

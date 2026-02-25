@@ -2,7 +2,7 @@ import type Task from './tasks/task';
 import { db } from './db';
 import { updateHistory } from './db/schema';
 import type TaskObserver from './tasks/task-observer';
-import { isComplete, Status, type TaskDetails } from '$lib/task-info';
+import { isComplete, Status, type TaskDetails } from '$lib/types/task-info';
 
 class UpdateRunner implements TaskObserver {
 	async notify(info: TaskDetails): Promise<void> {

@@ -2,8 +2,8 @@ import { and, eq, inArray } from "drizzle-orm";
 import { db } from "..";
 import { bookMetadata, externalLinks, media } from "../schema";
 import type { BookMetadata, Media } from "../types";
-import { keyBy } from "$lib/util";
 import type { CreateMedia } from "./create-media";
+import keyBy from "$lib/util/key-by";
 
 async function getExistingMedia(
   input: Pick<Media, "externalId" | "mediaType">,

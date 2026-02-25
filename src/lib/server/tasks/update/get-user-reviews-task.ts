@@ -1,4 +1,4 @@
-import { Status } from "$lib/task-info";
+import { Status } from "$lib/types/task-info";
 import type ReviewFetcher from "../../review-fetchers/review-fetcher";
 import GetUserReviewPageTask from "./get-user-review-page-task";
 import type Task from "../task";
