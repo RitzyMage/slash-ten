@@ -1,6 +1,6 @@
 import { Status } from "$lib/task-info";
 import { randomDateInRange, TWO_YEARS } from "../date-utils/date-ranges";
-import Database from "../db/database";
+import { UpdateUserDate } from "../db/users/update-user-date";
 import Task from "./task";
 
 export default class UpdateUserCacheTask extends Task {
@@ -16,7 +16,7 @@ export default class UpdateUserCacheTask extends Task {
       completion: 0,
     });
 
-    await this._database.updateUserNextUpdate(
+    await UpdateUserDate(
       this._id,
       randomDateInRange(TWO_YEARS)
     );
@@ -29,5 +29,4 @@ export default class UpdateUserCacheTask extends Task {
   }
 
   private _id: number;
-  private _database = new Database();
 }

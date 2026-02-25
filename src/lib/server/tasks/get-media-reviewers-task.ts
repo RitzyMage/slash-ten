@@ -1,8 +1,9 @@
 import { Status } from "$lib/task-info";
 import { FIVE_YEARS, randomDateInRange } from "../date-utils/date-ranges";
-import Database from "../db/database";
+import addUsers from "../db/users/add-users";
 import type ReviewFetcher from "../review-fetchers/review-fetcher";
 import Task from "./task";
+import UpdateMediaDate from "../db/media/update-media-date";
 
 const TEST_TIME = 200;
 const CHUNKS = 10;
@@ -34,7 +35,7 @@ export default class GetMediaReviewersTask extends Task {
       this._mediaLink
     );
 
-    await this._database.addUsers(
+    await addUsers(
       reviewers.map((_) => ({
         externalId: _.id,
         mediaType: this._reviewFetcher.mediaType,
@@ -42,7 +43,7 @@ export default class GetMediaReviewersTask extends Task {
       }))
     );
 
-    await this._database.updateMediaNextUpdate(
+    await UpdateMediaDate(
       this._mediaId,
       randomDateInRange(FIVE_YEARS)
     );
@@ -57,5 +58,4 @@ export default class GetMediaReviewersTask extends Task {
   private _mediaId: number;
   private _mediaLink: string;
   private _reviewFetcher: ReviewFetcher;
-  private _database: Database = new Database();
 }

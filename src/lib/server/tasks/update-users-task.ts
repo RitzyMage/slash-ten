@@ -1,5 +1,5 @@
 import { Status } from "$lib/task-info";
-import Database from "../db/database";
+import GetStaleUsers from "../db/users/get-stale-users";
 import type ReviewFetcher from "../review-fetchers/review-fetcher";
 import GetUserReviewsTask from "./get-user-reviews-task";
 import Task from "./task";
@@ -20,7 +20,7 @@ export default class UpdateUsersTask extends TaskSequenceWithInitialize {
       completion: 0,
     });
 
-    let staleUsers = await this._database.getStaleUsers(LIMIT);
+    let staleUsers = await GetStaleUsers(LIMIT);
 
     this.updateStatus({
       status: Status.IN_PROGRESS,
@@ -43,6 +43,5 @@ export default class UpdateUsersTask extends TaskSequenceWithInitialize {
     return "getting all users";
   }
 
-  private _database = new Database();
   private _reviewFetcher: ReviewFetcher;
 }

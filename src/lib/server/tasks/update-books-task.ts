@@ -1,4 +1,4 @@
-import Database from "../db/database";
+import GetStaleMedia from "../db/media/get-stale-media";
 import type ReviewFetcher from "../review-fetchers/review-fetcher";
 import GetMediaReviewersTask from "./get-media-reviewers-task";
 import Task from "./task";
@@ -13,7 +13,7 @@ export default class UpdateBooksTask extends TaskSequenceWithInitialize {
   }
 
   protected async GetSequence(): Promise<Task[]> {
-    let staleMedia = await this._database.getStaleMedia(
+    let staleMedia = await GetStaleMedia(
       this._reviewFetcher.mediaType,
       LIMIT
     );
@@ -32,5 +32,4 @@ export default class UpdateBooksTask extends TaskSequenceWithInitialize {
   }
 
   private _reviewFetcher: ReviewFetcher;
-  private _database: Database = new Database();
 }

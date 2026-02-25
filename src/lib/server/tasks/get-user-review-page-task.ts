@@ -1,5 +1,6 @@
 import { Status } from "$lib/task-info";
-import Database from "../db/database";
+import AddMedia from "../db/media/add-media";
+import AddReviews from "../db/reviews/add-reviews";
 import type ReviewFetcher from "../review-fetchers/review-fetcher";
 import Task from "./task";
 
@@ -42,8 +43,8 @@ export default class GetUserReviewPageTask extends Task {
       completion: 0.7,
     });
 
-    let media = await this._database.addMedia(reviews.media);
-    await this._database.addReviews(this._userId, reviews.reviews, media);
+    let media = await AddMedia(reviews.media);
+    await AddReviews(this._userId, reviews.reviews, media);
 
     this.updateStatus({
       status: Status.SUCCESSFUL,
@@ -56,5 +57,4 @@ export default class GetUserReviewPageTask extends Task {
   private _userId: number;
   private _page: number;
   private _reviewFetcher: ReviewFetcher;
-  private _database = new Database();
 }
