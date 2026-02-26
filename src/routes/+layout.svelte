@@ -1,4 +1,5 @@
 <script>
+  import ClientSelector from "$lib/components/clients/client-selector.svelte";
   import Header from "$lib/components/header.svelte";
   import "../app.css";
 </script>
@@ -7,3 +8,4 @@
 <article>
   <slot />
 </article>
+<ClientSelector />
