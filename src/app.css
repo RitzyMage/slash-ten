@@ -15,6 +15,7 @@
 
 	--black: #1c1917;
 	--gray-dark: #292524;
+	--gray: #524a48;
 	--gray-light: #e7e5e4;
 	--white: #f5f5f4;
 
@@ -31,6 +32,7 @@
 
 	--bg-dark: var(--black);
 	--bg: var(--gray-dark);
+	--bg-light: var(--gray);
 
 	--text: var(--gray-light);
 	--text-emphasis: var(--white);
