@@ -1,20 +1,16 @@
 import { db } from "$lib/server/db";
-import { media, userPredictedScores } from "$lib/server/db/schema";
-import { desc, eq } from "drizzle-orm";
+import { clients} from "$lib/server/db/schema";
+import { asc } from "drizzle-orm";
 import type { PageServerLoad } from "./$types";
-import DEFAULT_CLIENT from "$lib/tmp/default-client";
-import type ScoreWithMedia from "$lib/types/score-with-media";
+import type { Client } from "$lib/server/db/types";
 
 export const load: PageServerLoad = async (): Promise<{
-  recommendations: ScoreWithMedia[];
+  clients: Client[];
 }> => {
   return {
-    recommendations: await db
+    clients: await db
       .select()
-      .from(userPredictedScores)
-      .where(eq(userPredictedScores.clientId, DEFAULT_CLIENT))
-      .innerJoin(media, eq(media.id, userPredictedScores.mediaId))
-      .orderBy(desc(userPredictedScores.score))
-      .limit(50),
+      .from(clients)
+      .orderBy(asc(clients.id)),
   };
 };
