@@ -1,4 +1,5 @@
 <script lang="ts">
+  import ClientsPage from "$lib/components/clients/clients-page.svelte";
   import MediaCard from "$lib/components/media-card.svelte";
   import type { PageProps } from "./$types";
 
@@ -6,7 +7,4 @@
   let { clients } = data;
 </script>
 
-<h1>Clients</h1>
-{#each clients as client}
-  <div>{JSON.stringify(client)}</div>
-{/each}
+<ClientsPage {clients} />
