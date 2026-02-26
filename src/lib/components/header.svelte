@@ -1,10 +1,7 @@
 <script lang="ts">
   import Menu from "./icons/menu.svelte";
 
-  const headerLinks = [
-    { name: "Update", path: "/update" },
-    { name: "Read", path: "/read" },
-  ] as const;
+  const headerLinks = [{ name: "Update", path: "/update" }] as const;
 
   let toggleMenu = () => {
     menuShown = !menuShown;
@@ -63,6 +60,7 @@
     padding: 0 2px;
     border-radius: var(--rounded);
     font-size: 16px;
+    color: var(--bg-dark);
   }
 
   .homeLink-name {
