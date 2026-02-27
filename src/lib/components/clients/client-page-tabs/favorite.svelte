@@ -1,0 +1,1 @@
+<div>Favorite Placeholder</div>
