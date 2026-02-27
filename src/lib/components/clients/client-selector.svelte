@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Client } from "$lib/server/db/types";
   import Close from "../icons/close.svelte";
+  import client from "./client-state.svelte";
   const openModal = {
     command: "show-modal",
     commandfor: "clientSelector-modal",
@@ -22,7 +23,7 @@
     >
   </div>
   <h2>Clients</h2>
-  <select id="client-select">
+  <select id="client-select" bind:value={client.id}>
     <option value="">---</option>
     {#each clients as client}
       <option value={client.id}>{client.name}</option>
