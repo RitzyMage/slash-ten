@@ -12,9 +12,15 @@
   } as any;
 
   export let clients: Client[];
+
+  let name = client.id
+    ? clients.find((_) => _.id === client.id)?.name
+    : undefined;
 </script>
 
-<button id="clientSelector-button" {...openModal}> No Client Selected </button>
+<button id="clientSelector-button" {...openModal}>
+  {name ? `Client: ${name}` : "No Client Selected"}
+</button>
 
 <dialog id="clientSelector-modal">
   <div class="clientSelector-header">
@@ -24,9 +30,11 @@
   </div>
   <h2>Clients</h2>
   <select id="client-select" bind:value={client.id}>
-    <option value="">---</option>
+    <option value="" onclick={() => (name = "")}>---</option>
     {#each clients as client}
-      <option value={client.id}>{client.name}</option>
+      <option value={client.id} onclick={() => (name = client.name)}
+        >{client.name}</option
+      >
     {/each}
   </select>
 
