@@ -8,6 +8,11 @@
   type ClientTabs = "Recommendations" | "Favorite" | "Ignored" | "Backlog";
 
   let tab = $state<ClientTabs>("Recommendations");
+
+  $effect(() => {
+    console.log("CLIENT", client.id);
+    // TODO call api for recommendations
+  });
 </script>
 
 <h1>Client</h1>
