@@ -6,7 +6,7 @@
 
 <div>
   {#if client.id}
-    Client {client.id} selected
+    Client {client.id} selected with type {client.mediaType}
   {:else}
     Select a client to see data
   {/if}

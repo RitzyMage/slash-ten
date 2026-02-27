@@ -12,28 +12,29 @@
   } as any;
 
   export let clients: Client[];
-
-  let dialogModal: HTMLDialogElement;
 </script>
 
 <button id="clientSelector-button" {...openModal}> No Client Selected </button>
 
-<dialog id="clientSelector-modal" bind:this={dialogModal}>
+<dialog id="clientSelector-modal">
   <div class="clientSelector-header">
     <button class="clientSelector-close" {...closeModal}
       ><Close size={20} /></button
     >
   </div>
   <h2>Clients</h2>
-  <select
-    id="client-select"
-    bind:value={client.id}
-    onchange={() => dialogModal.close()}
-  >
+  <select id="client-select" bind:value={client.id}>
     <option value="">---</option>
     {#each clients as client}
       <option value={client.id}>{client.name}</option>
     {/each}
+  </select>
+
+  <h2>Type</h2>
+  <select id="type-select" bind:value={client.mediaType}>
+    <option value="BOOK">Book</option>
+    <option value="GAME">Game</option>
+    <option value="MOVIE">Movie</option>
   </select>
 </dialog>
 
