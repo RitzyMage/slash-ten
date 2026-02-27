@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { Client } from "$lib/server/db/types";
   import Close from "../icons/close.svelte";
   const openModal = {
     command: "show-modal",
@@ -8,9 +9,12 @@
     command: "close",
     commandfor: "clientSelector-modal",
   } as any;
+
+  export let clients: Client[];
 </script>
 
 <button id="clientSelector-button" {...openModal}> No Client Selected </button>
+
 <dialog id="clientSelector-modal">
   <div class="clientSelector-header">
     <button class="clientSelector-close" {...closeModal}
@@ -20,8 +24,9 @@
   <h2>Clients</h2>
   <select id="client-select">
     <option value="">---</option>
-    <option value="">Avery</option>
-    <option value="">Some other guy</option>
+    {#each clients as client}
+      <option value={client.id}>{client.name}</option>
+    {/each}
   </select>
 </dialog>
 
@@ -40,6 +45,8 @@
     cursor: pointer;
 
     font-size: var(--2);
+
+    transition: all 300ms;
   }
 
   #clientSelector-button:hover {
