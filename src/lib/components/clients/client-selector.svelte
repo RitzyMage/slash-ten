@@ -11,7 +11,7 @@
     commandfor: "clientSelector-modal",
   } as any;
 
-  export let clients: Client[];
+  let { clients } = $props<Client[]>();
 
   let name = client.id
     ? clients.find((_) => _.id === client.id)?.name
