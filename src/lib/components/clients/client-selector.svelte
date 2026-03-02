@@ -11,11 +11,11 @@
     commandfor: "clientSelector-modal",
   } as any;
 
-  let { clients } = $props<Client[]>();
+  let { clients }: { clients: Client[] } = $props();
 
-  let name = client.id
-    ? clients.find((_) => _.id === client.id)?.name
-    : undefined;
+  let name = $derived(
+    client.id ? clients.find((_) => _.id === client.id)?.name : undefined,
+  );
 </script>
 
 <button id="clientSelector-button" {...openModal}>
