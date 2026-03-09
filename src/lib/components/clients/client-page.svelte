@@ -14,9 +14,15 @@
 
   $effect(() => {
     let getInfo = async () => {
-      let data = await fetch(`/recommendations/${client.id}`);
-      let newRecs = await data.json();
-      recommendations = newRecs;
+      let data = await fetch(
+        `/recommendations/${client.id}?type=${client.mediaType}`,
+      );
+      if (data.ok) {
+        let newRecs = await data.json();
+        recommendations = newRecs;
+      } else {
+        // TODO handle this
+      }
     };
     getInfo();
     console.log("CLIENT", client.id);
