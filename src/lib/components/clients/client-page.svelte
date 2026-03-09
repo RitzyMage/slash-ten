@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { Media } from "$lib/server/db/types";
   import Backlog from "./client-page-tabs/backlog.svelte";
   import Favorite from "./client-page-tabs/favorite.svelte";
   import Ignored from "./client-page-tabs/ignored.svelte";
@@ -9,7 +10,15 @@
 
   let tab = $state<ClientTabs>("Recommendations");
 
+  let recommendations: Media[] = $state([]);
+
   $effect(() => {
+    let getInfo = async () => {
+      let data = await fetch(`/recommendations/${client.id}`);
+      let newRecs = await data.json();
+      recommendations = newRecs;
+    };
+    getInfo();
     console.log("CLIENT", client.id);
     // TODO call api for recommendations
   });
@@ -39,7 +48,7 @@
       >
     </div>
     {#if tab === "Recommendations"}
-      <Recommendations />
+      <Recommendations {recommendations} />
     {:else if tab === "Favorite"}
       <Favorite />
     {:else if tab === "Backlog"}
