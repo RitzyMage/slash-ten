@@ -1,9 +1,8 @@
 <script lang="ts">
-  import type { Media } from "$lib/server/db/types";
-
-  export let recommendations: Media[];
+  export let recommendations: Recommendation[];
 
   import MediaCard from "$lib/components/media-card.svelte";
+  import type Recommendation from "$lib/types/recommendation";
 </script>
 
 <div class="recommendations">

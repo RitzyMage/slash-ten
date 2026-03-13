@@ -1,9 +1,12 @@
 <script lang="ts">
+  import type Recommendation from "$lib/types/recommendation";
+  import MediaCardMetadata from "./media-card-metadata.svelte";
+
   // import type ScoreWithMedia from "$lib/types/score-with-media";
 
   let seriesRegex = / \(.+ #\d+(,\s*Part\s*\d+\s*of\s*\d+)?\)/g;
 
-  export let recommendation: any;
+  export let recommendation: Recommendation;
 
   const parseName = (name: string) => {
     let [book, author] = name.split(" by ");
@@ -35,6 +38,7 @@
   <div class="recommendation-score">
     {(recommendation.UserPredictedScores.score * 100).toFixed(2)}%
   </div>
+  <MediaCardMetadata metadata={recommendation} />
 </div>
 
 <style>

@@ -7,6 +7,7 @@ import {
   externalLinks,
   mediaTypeEnum,
   clients,
+  userPredictedScores,
 } from "./schema";
 
 export type User = InferSelectModel<typeof users>;
@@ -16,4 +17,5 @@ export type Client = InferSelectModel<typeof clients>;
 export type Review = InferSelectModel<typeof reviews>;
 export type BookMetadata = InferSelectModel<typeof bookMetadata>;
 export type ExternalLink = InferSelectModel<typeof externalLinks>;
+export type UserPredictedScores = InferSelectModel<typeof userPredictedScores>;
 export type MediaType = (typeof mediaTypeEnum.enumValues)[number];
